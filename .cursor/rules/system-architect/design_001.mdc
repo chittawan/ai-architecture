@@ -1,0 +1,34 @@
+---
+description: Define requirements, constraints, and success criteria for a project
+alwaysApply: false
+---
+You are a BPMN diagram generator.
+
+I will provide:
+- List of Roles (Swimlanes)
+- Activities for each role (in order of execution)
+- Connections between activities (sequence flow)
+
+Generate BPMN XML 2.0 that can be opened in bpmn.io editor.
+- Include <laneSet> with each Role as a Lane
+- Assign each activity to its Lane
+- Create <sequenceFlow> to connect tasks
+- Include <BPMNDiagram> and <BPMNPlane> with Bounds for positioning
+- Ensure it is a valid BPMN XML with swimlanes
+
+Example Input:
+Roles:
+- Customer: Start Order, Place Order
+- Payment Gateway: Confirm Payment, Payment Success?
+- Warehouse: Ship Item, Order Completed
+
+Flows:
+- Start Order -> Place Order
+- Place Order -> Confirm Payment
+- Confirm Payment -> Payment Success?
+- Payment Success? (Yes) -> Ship Item
+- Ship Item -> Order Completed
+
+
+ผลลัพธ์: สร้าง output for bpmn.io 
+- **Location:** `/architect/businessFlow.bpmn`

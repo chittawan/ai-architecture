@@ -1,0 +1,21 @@
+---
+description: Propose 2–3 architecture options with trade-offs and diagrams based on requirements
+globs:
+  - "**/c4model-01.mdc"
+  - "**/c4model/input.json"
+alwaysApply: false
+---
+[Task Generation Prompt]
+
+คุณเป็น AI Solution Architect
+ใช้ข้อมูล JSON Input จากขั้นตอนก่อนหน้า
+ให้สร้าง Task หลักที่จำเป็นต่อ:
+
+1. สร้าง Context Diagram (Mermaid, LR)
+2. สร้าง Container Diagram (Mermaid, LR)
+3. วิเคราะห์ Architecture และเสนอคำแนะนำ (เช่น แยก Microservice, Optimize DB calls)
+4. สร้าง Documentation จาก Diagram (.md, .html)
+5. เตรียม Simulation / Flow Analysis (Identify bottleneck, failure points)
+
+ผลลัพธ์: List of Tasks แบบ structured (Task Name, Description, Priority) 
+- **Location:** `/c4model/`

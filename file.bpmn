@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             id="Definitions_1"
+             targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <!-- Process -->
+  <process id="Process_ABC" isExecutable="false">
+
+    <!-- LaneSet -->
+    <laneSet id="LaneSet_1">
+      <lane id="Lane_Sales" name="ฝ่ายขาย">
+        <flowNodeRef>Start_Sales</flowNodeRef>
+        <flowNodeRef>Task_Order</flowNodeRef>
+        <flowNodeRef>Task_CheckStock</flowNodeRef>
+        <flowNodeRef>Gateway_Stock</flowNodeRef>
+        <flowNodeRef>Task_NotifyWarehouse</flowNodeRef>
+        <flowNodeRef>End_Success</flowNodeRef>
+        <flowNodeRef>Task_NotifyCustomer</flowNodeRef>
+        <flowNodeRef>End_Fail</flowNodeRef>
+      </lane>
+      <lane id="Lane_Warehouse" name="คลังสินค้า">
+        <flowNodeRef>Task_PrepareGoods</flowNodeRef>
+        <flowNodeRef>Task_ShipGoods</flowNodeRef>
+      </lane>
+      <lane id="Lane_Customer" name="ลูกค้า">
+        <flowNodeRef>Start_Customer</flowNodeRef>
+        <flowNodeRef>End_Receive</flowNodeRef>
+      </lane>
+    </laneSet>
+
+    <!-- Sales Lane -->
+    <startEvent id="Start_Sales" name="Start"/>
+    <task id="Task_Order" name="รับคำสั่งซื้อ"/>
+    <task id="Task_CheckStock" name="ตรวจสอบสต็อก"/>
+    <exclusiveGateway id="Gateway_Stock" name="สต็อกเพียงพอ?"/>
+    <task id="Task_NotifyWarehouse" name="แจ้งคลังเตรียมสินค้า"/>
+    <endEvent id="End_Success" name="ส่งสินค้าเรียบร้อย"/>
+    <task id="Task_NotifyCustomer" name="แจ้งลูกค้า"/>
+    <endEvent id="End_Fail" name="คำสั่งซื้อไม่สำเร็จ"/>
+
+    <!-- Warehouse Lane -->
+    <task id="Task_PrepareGoods" name="จัดเตรียมสินค้า"/>
+    <task id="Task_ShipGoods" name="จัดส่งสินค้า"/>
+
+    <!-- Customer Lane -->
+    <startEvent id="Start_Customer" name="ส่งคำสั่งซื้อ"/>
+    <endEvent id="End_Receive" name="ได้รับสินค้า"/>
+
+    <!-- Sequence Flows -->
+    <sequenceFlow id="Flow_1" sourceRef="Start_Sales" targetRef="Task_Order"/>
+    <sequenceFlow id="Flow_2" sourceRef="Task_Order" targetRef="Task_CheckStock"/>
+    <sequenceFlow id="Flow_3" sourceRef="Task_CheckStock" targetRef="Gateway_Stock"/>
+    <sequenceFlow id="Flow_4" sourceRef="Gateway_Stock" targetRef="Task_NotifyWarehouse">
+      <conditionExpression xsi:type="tFormalExpression">Yes</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_5" sourceRef="Gateway_Stock" targetRef="Task_NotifyCustomer">
+      <conditionExpression xsi:type="tFormalExpression">No</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_6" sourceRef="Task_NotifyWarehouse" targetRef="End_Success"/>
+    <sequenceFlow id="Flow_7" sourceRef="Task_NotifyCustomer" targetRef="End_Fail"/>
+    <sequenceFlow id="Flow_8" sourceRef="Task_PrepareGoods" targetRef="Task_ShipGoods"/>
+  </process>
+
+  <!-- BPMN Diagram Interchange -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_ABC">
+
+      <!-- Sales Lane -->
+      <bpmndi:BPMNShape id="Start_Sales_di" bpmnElement="Start_Sales">
+        <dc:Bounds x="100" y="50" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Order_di" bpmnElement="Task_Order">
+        <dc:Bounds x="200" y="50" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CheckStock_di" bpmnElement="Task_CheckStock">
+        <dc:Bounds x="350" y="50" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Stock_di" bpmnElement="Gateway_Stock" isMarkerVisible="true">
+        <dc:Bounds x="500" y="65" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_NotifyWarehouse_di" bpmnElement="Task_NotifyWarehouse">
+        <dc:Bounds x="600" y="20" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Success_di" bpmnElement="End_Success">
+        <dc:Bounds x="750" y="35" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_NotifyCustomer_di" bpmnElement="Task_NotifyCustomer">
+        <dc:Bounds x="600" y="120" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Fail_di" bpmnElement="End_Fail">
+        <dc:Bounds x="750" y="135" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Warehouse Lane -->
+      <bpmndi:BPMNShape id="Task_PrepareGoods_di" bpmnElement="Task_PrepareGoods">
+        <dc:Bounds x="200" y="200" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ShipGoods_di" bpmnElement="Task_ShipGoods">
+        <dc:Bounds x="350" y="200" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Customer Lane -->
+      <bpmndi:BPMNShape id="Start_Customer_di" bpmnElement="Start_Customer">
+        <dc:Bounds x="100" y="300" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Receive_di" bpmnElement="End_Receive">
+        <dc:Bounds x="750" y="300" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Sequence Flows DI (ง่ายๆ) -->
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="136" y="68"/>
+        <di:waypoint x="200" y="90"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="300" y="90"/>
+        <di:waypoint x="350" y="90"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="450" y="90"/>
+        <di:waypoint x="500" y="90"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="525" y="65"/>
+        <di:waypoint x="600" y="60"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="525" y="115"/>
+        <di:waypoint x="600" y="160"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="700" y="60"/>
+        <di:waypoint x="750" y="53"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
+        <di:waypoint x="700" y="160"/>
+        <di:waypoint x="750" y="153"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
+        <di:waypoint x="300" y="240"/>
+        <di:waypoint x="350" y="240"/>
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                  id="Definitions_1" 
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+  
+  <bpmn:process id="Order_Process" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="CustomerLane" name="Customer">
+        <bpmn:flowNodeRef>StartOrder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PlaceOrderTask</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PaymentLane" name="Payment Gateway">
+        <bpmn:flowNodeRef>ConfirmPaymentTask</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PaymentGateway</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="WarehouseLane" name="Warehouse">
+        <bpmn:flowNodeRef>ShipItemTask</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>OrderComplete</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <!-- Customer Lane Activities -->
+    <bpmn:startEvent id="StartOrder" name="Place Order"/>
+    <bpmn:task id="PlaceOrderTask" name="Place Order"/>
+    
+    <!-- Payment Gateway Lane Activities -->
+    <bpmn:task id="ConfirmPaymentTask" name="Confirm Payment"/>
+    <bpmn:exclusiveGateway id="PaymentGateway" name="Payment Success?"/>
+    
+    <!-- Warehouse Lane Activities -->
+    <bpmn:task id="ShipItemTask" name="Ship Item"/>
+    <bpmn:endEvent id="OrderComplete" name="Order Completed"/>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartOrder" targetRef="PlaceOrderTask"/>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="PlaceOrderTask" targetRef="ConfirmPaymentTask"/>
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="ConfirmPaymentTask" targetRef="PaymentGateway"/>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="PaymentGateway" targetRef="ShipItemTask" name="Success"/>
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="ShipItemTask" targetRef="OrderComplete"/>
+    
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Order_Process">
+      
+      <!-- Lane Shapes -->
+      <bpmndi:BPMNShape id="Lane_Customer" bpmnElement="CustomerLane" isHorizontal="true">
+        <dc:Bounds x="152" y="80" width="600" height="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Payment" bpmnElement="PaymentLane" isHorizontal="true">
+        <dc:Bounds x="152" y="200" width="600" height="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Warehouse" bpmnElement="WarehouseLane" isHorizontal="true">
+        <dc:Bounds x="152" y="320" width="600" height="120"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Flow Node Shapes -->
+      <bpmndi:BPMNShape id="StartOrder_di" bpmnElement="StartOrder">
+        <dc:Bounds x="202" y="122" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="189" y="165" width="62" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="PlaceOrderTask_di" bpmnElement="PlaceOrderTask">
+        <dc:Bounds x="290" y="100" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="ConfirmPaymentTask_di" bpmnElement="ConfirmPaymentTask">
+        <dc:Bounds x="290" y="220" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="PaymentGateway_di" bpmnElement="PaymentGateway" isMarkerVisible="true">
+        <dc:Bounds x="445" y="235" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="427" y="292" width="86" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="ShipItemTask_di" bpmnElement="ShipItemTask">
+        <dc:Bounds x="420" y="340" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="OrderComplete_di" bpmnElement="OrderComplete">
+        <dc:Bounds x="582" y="362" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="560" y="405" width="81" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Sequence Flow Edges -->
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="238" y="140"/>
+        <di:waypoint x="290" y="140"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="340" y="180"/>
+        <di:waypoint x="340" y="220"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="390" y="260"/>
+        <di:waypoint x="445" y="260"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="470" y="285"/>
+        <di:waypoint x="470" y="340"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="471" y="310" width="42" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="520" y="380"/>
+        <di:waypoint x="582" y="380"/>
+      </bpmndi:BPMNEdge>
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  
+</bpmn:definitions>

@@ -1,0 +1,305 @@
+{
+    "project_overview": {
+        "name": "Sales Management System",
+        "description": "Microservice-based sales management system with multi-channel support"
+    },
+    "actors_users": [
+        {
+            "name": "Sales Team",
+            "role": "Primary sales personnel",
+            "platform": "Mobile App (SalesTeams subapp)",
+            "responsibilities": [
+                "Manage customer relationships",
+                "Process orders",
+                "Track sales performance",
+                "Handle promotions"
+            ]
+        },
+        {
+            "name": "Admin/Management",
+            "role": "System administrators and managers",
+            "platform": "Web Admin Panel",
+            "responsibilities": [
+                "Backend management",
+                "System configuration",
+                "User management",
+                "Analytics and reporting"
+            ]
+        },
+        {
+            "name": "Customers",
+            "role": "End customers purchasing products",
+            "platform": "Online platforms",
+            "responsibilities": [
+                "Browse products",
+                "Place orders",
+                "Make payments"
+            ]
+        }
+    ],
+    "our_system": {
+        "name": "Sales Management Platform",
+        "purpose": "Comprehensive sales management system supporting multiple channels and microservice architecture",
+        "architecture_type": "Microservices",
+        "key_features": [
+            "Order management",
+            "Payment processing",
+            "Promotion management",
+            "Product catalog",
+            "Multi-channel integration"
+        ]
+    },
+    "external_systems": [
+        {
+            "name": "SAP",
+            "type": "ERP System",
+            "purpose": "Enterprise resource planning integration",
+            "integration_method": "API"
+        },
+        {
+            "name": "TechServ Mobile",
+            "type": "Mobile Platform",
+            "purpose": "Mobile app infrastructure",
+            "integration_method": "SDK/API"
+        },
+        {
+            "name": "Lazada",
+            "type": "E-commerce Platform",
+            "purpose": "Online sales channel",
+            "integration_method": "API"
+        },
+        {
+            "name": "Shopee",
+            "type": "E-commerce Platform",
+            "purpose": "Online sales channel",
+            "integration_method": "API"
+        },
+        {
+            "name": "Flow",
+            "type": "E-commerce Platform",
+            "purpose": "Online sales channel",
+            "integration_method": "API"
+        },
+        {
+            "name": "Line OA",
+            "type": "Messaging Platform",
+            "purpose": "Customer communication and sales channel",
+            "integration_method": "Line API"
+        }
+    ],
+    "containers": [
+        {
+            "name": "Mobile App - SalesTeams",
+            "type": "Mobile Application",
+            "technology": "Mobile (iOS/Android)",
+            "purpose": "Sales team interface for order management and customer interaction",
+            "users": [
+                "Sales Team"
+            ]
+        },
+        {
+            "name": "Web Admin Panel",
+            "type": "Web Application",
+            "technology": "Web Frontend",
+            "purpose": "Administrative interface for backend management",
+            "users": [
+                "Admin/Management"
+            ]
+        },
+        {
+            "name": "Order Service",
+            "type": "Microservice",
+            "technology": "API Service",
+            "purpose": "Handle order processing and management",
+            "responsibilities": [
+                "Order creation",
+                "Order tracking",
+                "Order fulfillment"
+            ]
+        },
+        {
+            "name": "Payment Service",
+            "type": "Microservice",
+            "technology": "API Service",
+            "purpose": "Process payments and financial transactions",
+            "responsibilities": [
+                "Payment processing",
+                "Transaction management",
+                "Payment gateway integration"
+            ]
+        },
+        {
+            "name": "Promotion Service",
+            "type": "Microservice",
+            "technology": "API Service",
+            "purpose": "Manage promotions, discounts, and marketing campaigns",
+            "responsibilities": [
+                "Promotion management",
+                "Discount calculation",
+                "Campaign tracking"
+            ]
+        },
+        {
+            "name": "Product Service",
+            "type": "Microservice",
+            "technology": "API Service",
+            "purpose": "Manage product catalog and inventory",
+            "responsibilities": [
+                "Product management",
+                "Inventory tracking",
+                "Catalog maintenance"
+            ]
+        },
+        {
+            "name": "MongoDB Database",
+            "type": "Database",
+            "technology": "NoSQL Database",
+            "purpose": "Primary data storage for all services",
+            "data_types": [
+                "Orders",
+                "Products",
+                "Users",
+                "Promotions",
+                "Transactions"
+            ]
+        },
+        {
+            "name": "Kafka Message Queue",
+            "type": "Message Broker",
+            "technology": "Event Streaming Platform",
+            "purpose": "Handle asynchronous communication between microservices",
+            "responsibilities": [
+                "Event streaming",
+                "Message consumption",
+                "Service decoupling"
+            ]
+        }
+    ],
+    "communication_flow": {
+        "user_flows": [
+            {
+                "flow_name": "Sales Team Order Processing",
+                "steps": [
+                    "Sales Team → Mobile App (SalesTeams)",
+                    "Mobile App → Order Service",
+                    "Order Service → Product Service (check inventory)",
+                    "Order Service → Promotion Service (apply discounts)",
+                    "Order Service → Payment Service",
+                    "Payment Service → External Payment Gateway",
+                    "Order Service → Kafka (order events)",
+                    "Kafka → SAP (order sync)"
+                ]
+            },
+            {
+                "flow_name": "Online Platform Integration",
+                "steps": [
+                    "Customer → Online Platform (Lazada/Shopee/Flow/LineOA)",
+                    "Online Platform → Order Service (webhook/API)",
+                    "Order Service → Product Service",
+                    "Order Service → Payment Service",
+                    "Order Service → Kafka",
+                    "Kafka → All relevant services"
+                ]
+            },
+            {
+                "flow_name": "Admin Management",
+                "steps": [
+                    "Admin → Web Admin Panel",
+                    "Web Admin Panel → Various Microservices",
+                    "Microservices → MongoDB",
+                    "Microservices → Kafka (audit events)"
+                ]
+            }
+        ],
+        "service_communication": [
+            {
+                "pattern": "Synchronous",
+                "description": "REST API calls between services for immediate responses"
+            },
+            {
+                "pattern": "Asynchronous",
+                "description": "Kafka messaging for event-driven communication"
+            }
+        ]
+    },
+    "objectives_goals": [
+        {
+            "category": "Business",
+            "goals": [
+                "Streamline sales processes across multiple channels",
+                "Improve sales team efficiency and productivity",
+                "Centralize order and customer management",
+                "Enable real-time promotion and discount management"
+            ]
+        },
+        {
+            "category": "Technical",
+            "goals": [
+                "Implement scalable microservice architecture",
+                "Ensure high availability and fault tolerance",
+                "Support multi-channel integration",
+                "Enable real-time data processing and analytics"
+            ]
+        },
+        {
+            "category": "Integration",
+            "goals": [
+                "Seamless integration with existing SAP system",
+                "Multi-platform e-commerce connectivity",
+                "Real-time synchronization across all channels"
+            ]
+        }
+    ],
+    "constraints_notes": {
+        "architectural_constraints": [
+            {
+                "type": "Architecture Pattern",
+                "constraint": "Must follow microservice design patterns",
+                "rationale": "Scalability and maintainability requirements"
+            },
+            {
+                "type": "Database",
+                "constraint": "Primary database must be MongoDB",
+                "rationale": "NoSQL flexibility for varied data structures"
+            },
+            {
+                "type": "Messaging",
+                "constraint": "Use Kafka for inter-service communication",
+                "rationale": "Event-driven architecture and service decoupling"
+            }
+        ],
+        "integration_constraints": [
+            {
+                "type": "External Systems",
+                "constraint": "Must integrate with existing SAP system",
+                "rationale": "Business continuity and data consistency"
+            },
+            {
+                "type": "Mobile Platform",
+                "constraint": "Must use TechServ Mobile platform",
+                "rationale": "Existing mobile infrastructure"
+            }
+        ],
+        "technical_requirements": [
+            "High availability (99.9% uptime)",
+            "Scalable to handle peak sales periods",
+            "Real-time data synchronization",
+            "Secure payment processing",
+            "Multi-tenant architecture support"
+        ],
+        "success_criteria": [
+            "Successful integration with all external platforms",
+            "Sub-second response times for critical operations",
+            "Zero data loss during peak operations",
+            "Seamless user experience across all interfaces",
+            "Successful deployment of all microservices"
+        ]
+    },
+    "next_steps": [
+        "Create detailed C4 model diagrams (Context, Container, Component, Code)",
+        "Define API specifications for each microservice",
+        "Design database schemas for MongoDB",
+        "Plan Kafka topic structure and event schemas",
+        "Create deployment and infrastructure plans"
+    ]
+}

@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpsim="http://www.bpsim.org/schemas/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns:xsi="xsi" id="_OTcXYF9DED6nu8hn56cq5Q" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd " exporter="jBPM Process Modeler" exporterVersion="2.0" targetNamespace="http://www.omg.org/bpmn20">
+  <bpmn2:collaboration id="_D0D51906-31CC-447D-83CB-404DD3CFAD4E" name="Default Collaboration">
+    <bpmn2:participant id="_ADA71BCA-90B4-45A2-A32E-9B67B4038649" name="Pool Participant" processRef="businessFlow"/>
+  </bpmn2:collaboration>
+  <bpmn2:process id="businessFlow" drools:packageName="com.example" drools:version="1.0" drools:adHoc="false" name="businessFlow" isExecutable="true" processType="Public">
+    <bpmn2:laneSet>
+      <bpmn2:lane id="SurveyLane" name="Survey">
+        <bpmn2:extensionElements>
+          <drools:metaData name="elementname">
+            <drools:metaValue><![CDATA[Survey]]></drools:metaValue>
+          </drools:metaData>
+        </bpmn2:extensionElements>
+        <bpmn2:flowNodeRef>DoSurvey</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>CheckStock</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="SalesTeamLane" name="Sales Team">
+        <bpmn2:extensionElements>
+          <drools:metaData name="elementname">
+            <drools:metaValue><![CDATA[Sales Team]]></drools:metaValue>
+          </drools:metaData>
+        </bpmn2:extensionElements>
+        <bpmn2:flowNodeRef>ViewVisitPlan</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>VisitStore</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>CheckIn</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="TechServLane" name="TechServ">
+        <bpmn2:extensionElements>
+          <drools:metaData name="elementname">
+            <drools:metaValue><![CDATA[TechServ]]></drools:metaValue>
+          </drools:metaData>
+        </bpmn2:extensionElements>
+        <bpmn2:flowNodeRef>TakePhoto</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>SendLocationData</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ProvideSalesTeam</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ProvideSurvey</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>TakePhotoStock</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>SubmitForm</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>SubmitStockForm</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:sequenceFlow id="Flow_10" sourceRef="TakePhotoStock" targetRef="SubmitStockForm"/>
+    <bpmn2:sequenceFlow id="Flow_6" sourceRef="TakePhoto" targetRef="SubmitForm"/>
+    <bpmn2:sequenceFlow id="Flow_13" sourceRef="CheckIn" targetRef="SendLocationData"/>
+    <bpmn2:sequenceFlow id="Flow_3" sourceRef="VisitStore" targetRef="CheckIn"/>
+    <bpmn2:sequenceFlow id="Flow_2" sourceRef="ViewVisitPlan" targetRef="VisitStore"/>
+    <bpmn2:sequenceFlow id="Flow_11" sourceRef="ProvideSalesTeam" targetRef="ViewVisitPlan"/>
+    <bpmn2:sequenceFlow id="Flow_9" name="มี Stock" sourceRef="StockGateway" targetRef="TakePhotoStock">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[มี Stock]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_8" sourceRef="CheckStock" targetRef="StockGateway"/>
+    <bpmn2:sequenceFlow id="Flow_5" sourceRef="DoSurvey" targetRef="TakePhoto"/>
+    <bpmn2:sequenceFlow id="Flow_7" sourceRef="DoSurvey" targetRef="CheckStock"/>
+    <bpmn2:sequenceFlow id="Flow_12" sourceRef="ProvideSurvey" targetRef="DoSurvey"/>
+    <bpmn2:sequenceFlow id="Flow_4" sourceRef="CheckIn" targetRef="DoSurvey"/>
+    <bpmn2:task id="SubmitStockForm" name="ส่งฟอร์ม (Stock)">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[ส่งฟอร์ม (Stock)]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_10</bpmn2:incoming>
+    </bpmn2:task>
+    <bpmn2:task id="SubmitForm" name="ส่งฟอร์ม">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[ส่งฟอร์ม]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_6</bpmn2:incoming>
+    </bpmn2:task>
+    <bpmn2:task id="TakePhotoStock" name="ถ่ายรูป (Stock)">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[ถ่ายรูป (Stock)]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_9</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_10</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="ProvideSurvey" name="Provide Survey">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Provide Survey]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>Flow_12</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="ProvideSalesTeam" name="Provide Sales Team">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Provide Sales Team]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>Flow_11</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="SendLocationData" name="ส่งข้อมูลพิกัด">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[ส่งข้อมูลพิกัด]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_13</bpmn2:incoming>
+    </bpmn2:task>
+    <bpmn2:task id="TakePhoto" name="ถ่ายรูป">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[ถ่ายรูป]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_5</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_6</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="CheckIn" name="Check-in">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Check-in]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_3</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_4</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_13</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="VisitStore" name="เยี่ยมร้านค้า">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[เยี่ยมร้านค้า]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_2</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_3</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="ViewVisitPlan" name="ดูแผนเยี่ยม">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[ดูแผนเยี่ยม]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_11</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_2</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:startEvent id="StartVisit" name="เริ่มงานขาย">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[เริ่มงานขาย]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+    <bpmn2:exclusiveGateway id="StockGateway" name="มี Stock?">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[มี Stock?]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_8</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_9</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:task id="CheckStock" name="เชค Stock">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[เชค Stock]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_7</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_8</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="DoSurvey" name="ทำ Survey">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[ทำ Survey]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_4</bpmn2:incoming>
+      <bpmn2:incoming>Flow_12</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_7</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_5</bpmn2:outgoing>
+    </bpmn2:task>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="businessFlow">
+      <bpmndi:BPMNShape id="shape_DoSurvey" bpmnElement="DoSurvey">
+        <dc:Bounds height="80" width="100" x="740" y="480"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_CheckStock" bpmnElement="CheckStock">
+        <dc:Bounds height="80" width="100" x="890" y="480"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_StockGateway" bpmnElement="StockGateway">
+        <dc:Bounds height="56" width="56" x="1045" y="492"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_StartVisit" bpmnElement="StartVisit">
+        <dc:Bounds height="56" width="56" x="59" y="132"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_ViewVisitPlan" bpmnElement="ViewVisitPlan">
+        <dc:Bounds height="80" width="100" x="290" y="300"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_VisitStore" bpmnElement="VisitStore">
+        <dc:Bounds height="80" width="100" x="440" y="300"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_CheckIn" bpmnElement="CheckIn">
+        <dc:Bounds height="80" width="100" x="590" y="300"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_TakePhoto" bpmnElement="TakePhoto">
+        <dc:Bounds height="80" width="100" x="890" y="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_SendLocationData" bpmnElement="SendLocationData">
+        <dc:Bounds height="80" width="100" x="590" y="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_ProvideSalesTeam" bpmnElement="ProvideSalesTeam">
+        <dc:Bounds height="80" width="100" x="200" y="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_ProvideSurvey" bpmnElement="ProvideSurvey">
+        <dc:Bounds height="80" width="100" x="697" y="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_TakePhotoStock" bpmnElement="TakePhotoStock">
+        <dc:Bounds height="80" width="100" x="1120" y="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_SubmitForm" bpmnElement="SubmitForm">
+        <dc:Bounds height="80" width="100" x="1040" y="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_SubmitStockForm" bpmnElement="SubmitStockForm">
+        <dc:Bounds height="80" width="100" x="1270" y="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_SurveyLane" bpmnElement="SurveyLane">
+        <dc:Bounds height="180" width="1200" x="152" y="440"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_SalesTeamLane" bpmnElement="SalesTeamLane">
+        <dc:Bounds height="180" width="1200" x="152" y="260"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_TechServLane" bpmnElement="TechServLane">
+        <dc:Bounds height="180" width="1200" x="152" y="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge_shape_CheckIn_to_shape_DoSurvey" bpmnElement="Flow_4">
+        <di:waypoint x="640" y="380"/>
+        <di:waypoint x="640" y="430"/>
+        <di:waypoint x="790" y="430"/>
+        <di:waypoint x="790" y="480"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_ProvideSurvey_to_shape_DoSurvey" bpmnElement="Flow_12">
+        <di:waypoint x="747" y="200"/>
+        <di:waypoint x="747" y="400"/>
+        <di:waypoint x="790" y="400"/>
+        <di:waypoint x="790" y="480"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_DoSurvey_to_shape_CheckStock" bpmnElement="Flow_7">
+        <di:waypoint x="840" y="520"/>
+        <di:waypoint x="890" y="520"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_DoSurvey_to_shape_TakePhoto" bpmnElement="Flow_5">
+        <di:waypoint x="790" y="480"/>
+        <di:waypoint x="790" y="400"/>
+        <di:waypoint x="940" y="400"/>
+        <di:waypoint x="940" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_CheckStock_to_shape_StockGateway" bpmnElement="Flow_8">
+        <di:waypoint x="990" y="520"/>
+        <di:waypoint x="1045" y="517"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_StockGateway_to_shape_TakePhotoStock" bpmnElement="Flow_9">
+        <di:waypoint x="1070" y="492"/>
+        <di:waypoint x="1070" y="300"/>
+        <di:waypoint x="1170" y="300"/>
+        <di:waypoint x="1170" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_ProvideSalesTeam_to_shape_ViewVisitPlan" bpmnElement="Flow_11">
+        <di:waypoint x="250" y="200"/>
+        <di:waypoint x="250" y="250"/>
+        <di:waypoint x="340" y="250"/>
+        <di:waypoint x="340" y="300"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_ViewVisitPlan_to_shape_VisitStore" bpmnElement="Flow_2">
+        <di:waypoint x="390" y="340"/>
+        <di:waypoint x="440" y="340"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_VisitStore_to_shape_CheckIn" bpmnElement="Flow_3">
+        <di:waypoint x="540" y="340"/>
+        <di:waypoint x="590" y="340"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_CheckIn_to_shape_SendLocationData" bpmnElement="Flow_13">
+        <di:waypoint x="640" y="300"/>
+        <di:waypoint x="640" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_TakePhoto_to_shape_SubmitForm" bpmnElement="Flow_6">
+        <di:waypoint x="990" y="160"/>
+        <di:waypoint x="1040" y="160"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_TakePhotoStock_to_shape_SubmitStockForm" bpmnElement="Flow_10">
+        <di:waypoint x="1220" y="160"/>
+        <di:waypoint x="1270" y="160"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmn2:relationship type="BPSimData">
+    <bpmn2:extensionElements>
+      <bpsim:BPSimData>
+        <bpsim:Scenario id="default" name="Simulationscenario">
+          <bpsim:ScenarioParameters/>
+          <bpsim:ElementParameters elementRef="DoSurvey">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="CheckStock">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="StartVisit">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="ViewVisitPlan">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="VisitStore">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="CheckIn">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="TakePhoto">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="SendLocationData">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="ProvideSalesTeam">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="ProvideSurvey">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="TakePhotoStock">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="SubmitForm">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="SubmitStockForm">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+        </bpsim:Scenario>
+      </bpsim:BPSimData>
+    </bpmn2:extensionElements>
+    <bpmn2:source>_OTcXYF9DED6nu8hn56cq5Q</bpmn2:source>
+    <bpmn2:target>_OTcXYF9DED6nu8hn56cq5Q</bpmn2:target>
+  </bpmn2:relationship>
+</bpmn2:definitions>

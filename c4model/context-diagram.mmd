@@ -1,0 +1,22 @@
+graph LR
+    %% External Users/Actors
+    ST[Sales Team<br/>📱 Mobile Users] --> SMS[Sales Management<br/>System<br/>🏢 Core Platform]
+    AM[Admin/Management<br/>💻 Web Users] --> SMS
+    CU[Customers<br/>🛒 End Users] --> SMS
+    
+    %% External Systems Integration
+    SMS --> SAP[SAP<br/>🏭 ERP System]
+    SMS --> TM[TechServ Mobile<br/>📲 Mobile Platform]
+    SMS --> LAZ[Lazada<br/>🛍️ E-commerce]
+    SMS --> SHP[Shopee<br/>🛒 E-commerce]
+    SMS --> FLW[Flow<br/>💳 E-commerce]
+    SMS --> LOA[Line OA<br/>💬 Messaging Platform]
+    
+    %% Styling
+    classDef userClass fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef systemClass fill:#fff3e0,stroke:#e65100,stroke-width:3px
+    classDef externalClass fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    
+    class ST,AM,CU userClass
+    class SMS systemClass
+    class SAP,TM,LAZ,SHP,FLW,LOA externalClass

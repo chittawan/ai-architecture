@@ -1,0 +1,38 @@
+graph LR
+    %% User Interfaces
+    MA[Mobile App<br/>SalesTeams<br/>📱 React Native] --> OS[Order Service<br/>🛒 Node.js API]
+    WA[Web Admin Panel<br/>💻 React.js] --> OS
+    WA --> PS[Product Service<br/>📦 Node.js API]
+    WA --> PMS[Promotion Service<br/>🎯 Node.js API]
+    WA --> PYS[Payment Service<br/>💳 Node.js API]
+    
+    %% Microservices Communication
+    OS --> PS
+    OS --> PMS
+    OS --> PYS
+    OS --> KF[Kafka<br/>📨 Message Broker]
+    
+    %% Database Layer
+    OS --> DB[(MongoDB<br/>📊 NoSQL Database)]
+    PS --> DB
+    PMS --> DB
+    PYS --> DB
+    
+    %% Message Broker Communication
+    KF --> PS
+    KF --> PMS
+    KF --> PYS
+    
+    %% External Integration Point
+    PYS -.-> EXT[External Payment<br/>Gateway]
+    
+    %% Styling
+    classDef uiClass fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef serviceClass fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef dataClass fill:#e3f2fd,stroke:#0277bd,stroke-width:2px
+    classDef messageClass fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    
+    class MA,WA uiClass
+    class OS,PS,PMS,PYS serviceClass
+    class DB dataClass
+    class KF messageClass

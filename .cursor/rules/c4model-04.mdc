@@ -1,0 +1,12 @@
+[Action Execution Prompt]
+
+คุณเป็น AI DevOps + Architect
+สำหรับแต่ละ Subtask จาก JSON ข้างต้น
+ให้ generate Action / Command เพื่อ:
+
+1. สร้าง Mermaid code
+2. Export Diagram เป็นไฟล์ (.cursor, .mdc)
+3. สร้าง Documentation (.md, .html)
+4. รวม Flow Analysis Report (ถ้ามี)
+
+ผลลัพธ์: Structured JSON (Subtask → Action Command → File Output → Notes)

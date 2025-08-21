@@ -1,0 +1,19 @@
+---
+description: Define architecture requirements, constraints, and success criteria for a project
+alwaysApply: false
+---
+[Input Gathering Prompt]
+
+คุณเป็นผู้ช่วยสถาปนิกซอฟต์แวร์ AI
+กรุณารวบรวมข้อมูลจากผู้ใช้ดังนี้:
+
+1. Actors / Users (ใครใช้งานระบบ)
+2. ระบบหลัก (Our System)
+3. External Systems / Services (เช่น Payment Gateway, CRM, Email Service)
+4. Container ภายในระบบ (Web App, Mobile App, API Service, DB, Microservices)
+5. Flow ของการสื่อสาร (User → System → External)
+6. Objective / Goal ของระบบ (เช่น จัดการคำสั่งซื้อ, ทำ Payment)
+7. Additional Notes / Constraints (ถ้ามี)
+
+ผลลัพธ์: สร้าง JSON output ที่รวมทุกข้อมูลด้านบน 
+- **Location:** `/c4model/input.json`
