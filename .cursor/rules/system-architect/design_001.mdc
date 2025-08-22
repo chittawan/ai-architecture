@@ -16,19 +16,24 @@ Generate BPMN XML 2.0 that can be opened in bpmn.io editor.
 - Include <BPMNDiagram> and <BPMNPlane> with Bounds for positioning
 - Ensure it is a valid BPMN XML with swimlanes
 
-Example Input:
+Template Input:
 Roles:
-- Customer: Start Order, Place Order
-- Payment Gateway: Confirm Payment, Payment Success?
-- Warehouse: Ship Item, Order Completed
+- sales as SALE : operation
+- key account  as KA : crm management
+- salesteams as ST : order management 
+- privilege and promotion as PP : promotion management
+- ordermanagement as OMS : order center management
+- group loyalty platform as GLP : point mangement
 
 Flows:
-- Start Order -> Place Order
-- Place Order -> Confirm Payment
-- Confirm Payment -> Payment Success?
-- Payment Success? (Yes) -> Ship Item
-- Ship Item -> Order Completed
+- SALE -> KS
+- KA -> Analysis Dashboard -> เป้าขาย/ยอดขาย
+- ST -> เลือกสินค้า
+- OMS -> แสดง Promotions
+- ST -> ส่งคำสั่งซื้อ
+- GPL -> แจก point
 
 
-ผลลัพธ์: สร้าง output for bpmn.io 
-- **Location:** `/architect/businessFlow.bpmn`
+ผลลัพธ์: สร้าง output for bpmn.io และ สร้าง md สำหรับเก็บ Document Roles และ Flows 
+- **Location:** `/architect/*.bpmn`
+- **Location:** `/architect/*.md`

@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                  id="Definitions_OrderProcessing" 
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+  
+  <bpmn:process id="OrderProcessing_Process" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_OrderProcessing">
+      <bpmn:lane id="CustomerLane" name="Customer">
+        <bpmn:flowNodeRef>StartOrder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PlaceOrder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ReceiveNotification</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>OrderComplete</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="SalesLane" name="Sales Team">
+        <bpmn:flowNodeRef>ValidateOrder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>OrderValidGateway</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ProcessOrder</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="InventoryLane" name="Inventory Management">
+        <bpmn:flowNodeRef>CheckStock</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StockGateway</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ReserveStock</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PaymentLane" name="Payment Gateway">
+        <bpmn:flowNodeRef>ProcessPayment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PaymentGateway</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PaymentSuccess</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="FulfillmentLane" name="Fulfillment">
+        <bpmn:flowNodeRef>PrepareShipment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ShipOrder</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <!-- Customer Activities -->
+    <bpmn:startEvent id="StartOrder" name="Start Order"/>
+    <bpmn:task id="PlaceOrder" name="Place Order"/>
+    <bpmn:task id="ReceiveNotification" name="Receive Notification"/>
+    <bpmn:endEvent id="OrderComplete" name="Order Complete"/>
+    
+    <!-- Sales Team Activities -->
+    <bpmn:task id="ValidateOrder" name="Validate Order"/>
+    <bpmn:exclusiveGateway id="OrderValidGateway" name="Order Valid?"/>
+    <bpmn:task id="ProcessOrder" name="Process Order"/>
+    
+    <!-- Inventory Management Activities -->
+    <bpmn:task id="CheckStock" name="Check Stock"/>
+    <bpmn:exclusiveGateway id="StockGateway" name="Stock Available?"/>
+    <bpmn:task id="ReserveStock" name="Reserve Stock"/>
+    
+    <!-- Payment Gateway Activities -->
+    <bpmn:task id="ProcessPayment" name="Process Payment"/>
+    <bpmn:exclusiveGateway id="PaymentGateway" name="Payment Success?"/>
+    <bpmn:task id="PaymentSuccess" name="Payment Success"/>
+    
+    <!-- Fulfillment Activities -->
+    <bpmn:task id="PrepareShipment" name="Prepare Shipment"/>
+    <bpmn:task id="ShipOrder" name="Ship Order"/>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartOrder" targetRef="PlaceOrder"/>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="PlaceOrder" targetRef="ValidateOrder"/>
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="ValidateOrder" targetRef="OrderValidGateway"/>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="OrderValidGateway" targetRef="ProcessOrder" name="Valid"/>
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="ProcessOrder" targetRef="CheckStock"/>
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="CheckStock" targetRef="StockGateway"/>
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="StockGateway" targetRef="ReserveStock" name="Available"/>
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="ReserveStock" targetRef="ProcessPayment"/>
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="ProcessPayment" targetRef="PaymentGateway"/>
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="PaymentGateway" targetRef="PaymentSuccess" name="Success"/>
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="PaymentSuccess" targetRef="PrepareShipment"/>
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="PrepareShipment" targetRef="ShipOrder"/>
+    <bpmn:sequenceFlow id="Flow_13" sourceRef="ShipOrder" targetRef="ReceiveNotification"/>
+    <bpmn:sequenceFlow id="Flow_14" sourceRef="ReceiveNotification" targetRef="OrderComplete"/>
+    
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_OrderProcessing">
+    <bpmndi:BPMNPlane id="BPMNPlane_OrderProcessing" bpmnElement="OrderProcessing_Process">
+      
+      <!-- Lane Shapes -->
+      <bpmndi:BPMNShape id="Lane_Customer" bpmnElement="CustomerLane" isHorizontal="true">
+        <dc:Bounds x="152" y="80" width="1200" height="120"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="130" width="20" height="50"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Lane_Sales" bpmnElement="SalesLane" isHorizontal="true">
+        <dc:Bounds x="152" y="200" width="1200" height="120"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="240" width="20" height="70"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Lane_Inventory" bpmnElement="InventoryLane" isHorizontal="true">
+        <dc:Bounds x="152" y="320" width="1200" height="120"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="350" width="20" height="100"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Lane_Payment" bpmnElement="PaymentLane" isHorizontal="true">
+        <dc:Bounds x="152" y="440" width="1200" height="120"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="480" width="20" height="80"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Lane_Fulfillment" bpmnElement="FulfillmentLane" isHorizontal="true">
+        <dc:Bounds x="152" y="560" width="1200" height="120"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="600" width="20" height="70"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Flow Node Shapes -->
+      <!-- Customer Lane -->
+      <bpmndi:BPMNShape id="StartOrder_di" bpmnElement="StartOrder">
+        <dc:Bounds x="202" y="122" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="190" y="165" width="60" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="PlaceOrder_di" bpmnElement="PlaceOrder">
+        <dc:Bounds x="290" y="100" width="100" height="80"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="318" y="133" width="64" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="ReceiveNotification_di" bpmnElement="ReceiveNotification">
+        <dc:Bounds x="1050" y="100" width="100" height="80"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1065" y="120" width="70" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="OrderComplete_di" bpmnElement="OrderComplete">
+        <dc:Bounds x="1202" y="122" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1180" y="165" width="80" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Sales Team Lane -->
+      <bpmndi:BPMNShape id="ValidateOrder_di" bpmnElement="ValidateOrder">
+        <dc:Bounds x="290" y="220" width="100" height="80"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="310" y="246" width="70" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="OrderValidGateway_di" bpmnElement="OrderValidGateway" isMarkerVisible="true">
+        <dc:Bounds x="445" y="235" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="440" y="292" width="60" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="ProcessOrder_di" bpmnElement="ProcessOrder">
+        <dc:Bounds x="550" y="220" width="100" height="80"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="570" y="246" width="70" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Inventory Management Lane -->
+      <bpmndi:BPMNShape id="CheckStock_di" bpmnElement="CheckStock">
+        <dc:Bounds x="550" y="340" width="100" height="80"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="580" y="373" width="65" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="StockGateway_di" bpmnElement="StockGateway" isMarkerVisible="true">
+        <dc:Bounds x="705" y="355" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="690" y="412" width="80" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="ReserveStock_di" bpmnElement="ReserveStock">
+        <dc:Bounds x="810" y="340" width="100" height="80"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="830" y="366" width="74" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Payment Gateway Lane -->
+      <bpmndi:BPMNShape id="ProcessPayment_di" bpmnElement="ProcessPayment">
+        <dc:Bounds x="810" y="460" width="100" height="80"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="825" y="486" width="80" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="PaymentGateway_di" bpmnElement="PaymentGateway" isMarkerVisible="true">
+        <dc:Bounds x="965" y="475" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="950" y="532" width="86" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="PaymentSuccess_di" bpmnElement="PaymentSuccess">
+        <dc:Bounds x="940" y="580" width="100" height="80"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="955" y="606" width="80" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Fulfillment Lane -->
+      <bpmndi:BPMNShape id="PrepareShipment_di" bpmnElement="PrepareShipment">
+        <dc:Bounds x="810" y="580" width="100" height="80"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="825" y="606" width="80" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="ShipOrder_di" bpmnElement="ShipOrder">
+        <dc:Bounds x="680" y="580" width="100" height="80"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="715" y="613" width="58" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Sequence Flow Edges -->
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="238" y="140"/>
+        <di:waypoint x="290" y="140"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="340" y="180"/>
+        <di:waypoint x="340" y="220"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="390" y="260"/>
+        <di:waypoint x="445" y="260"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="495" y="260"/>
+        <di:waypoint x="550" y="260"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="513" y="242" width="24" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="600" y="300"/>
+        <di:waypoint x="600" y="340"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="650" y="380"/>
+        <di:waypoint x="705" y="380"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
+        <di:waypoint x="755" y="380"/>
+        <di:waypoint x="810" y="380"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="762" y="362" width="46" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
+        <di:waypoint x="860" y="420"/>
+        <di:waypoint x="860" y="460"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9">
+        <di:waypoint x="910" y="500"/>
+        <di:waypoint x="965" y="500"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10">
+        <di:waypoint x="990" y="525"/>
+        <di:waypoint x="990" y="580"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="993" y="550" width="42" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11">
+        <di:waypoint x="940" y="620"/>
+        <di:waypoint x="910" y="620"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_12_di" bpmnElement="Flow_12">
+        <di:waypoint x="810" y="620"/>
+        <di:waypoint x="780" y="620"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_13_di" bpmnElement="Flow_13">
+        <di:waypoint x="730" y="580"/>
+        <di:waypoint x="730" y="400"/>
+        <di:waypoint x="1100" y="400"/>
+        <di:waypoint x="1100" y="180"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_14_di" bpmnElement="Flow_14">
+        <di:waypoint x="1150" y="140"/>
+        <di:waypoint x="1202" y="140"/>
+      </bpmndi:BPMNEdge>
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  
+</bpmn:definitions>

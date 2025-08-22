@@ -19,3 +19,4 @@ alwaysApply: false
 
 ผลลัพธ์: List of Tasks แบบ structured (Task Name, Description, Priority) 
 - **Location:** `/c4model/`
+When you finish a **sub‑task**, immediately mark it as completed by changing `[ ]` to `[x]`.

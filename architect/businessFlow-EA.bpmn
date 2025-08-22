@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_BusinessFlow" targetNamespace="http://activiti.org/bpmn">
+  <bpmn2:process id="BusinessFlowProcess" isExecutable="false">
+    <bpmn2:laneSet id="LaneSet_1">
+      <bpmn2:lane id="Lane_Sales" name="Sales (SALE) - Operation">
+        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_Sales</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_KeyAccount" name="Key Account (KA) - CRM Management">
+        <bpmn2:flowNodeRef>Task_CRM</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_Dashboard</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_Target</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_SalesTeams" name="Sales Teams (ST) - Order Management">
+        <bpmn2:flowNodeRef>Task_SelectProducts</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_SendOrder</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_Promotion" name="Privilege & Promotion (PP)">
+        <bpmn2:flowNodeRef>Task_Promotion</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_OMS" name="Order Management (OMS)">
+        <bpmn2:flowNodeRef>Task_ShowPromo</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_OrderCenter</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_GLP" name="Group Loyalty Platform (GLP)">
+        <bpmn2:flowNodeRef>Task_Points</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    
+    <bpmn2:startEvent id="StartEvent_1" name="เริ่มกระบวนการ">
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    
+    <bpmn2:task id="Task_Sales" name="Sales Operation">
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+    </bpmn2:task>
+    
+    <bpmn2:task id="Task_CRM" name="CRM Management">
+      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
+    </bpmn2:task>
+    
+    <bpmn2:task id="Task_Dashboard" name="Analysis Dashboard">
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+    </bpmn2:task>
+    
+    <bpmn2:task id="Task_Target" name="เป้าขาย/ยอดขาย">
+      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+    </bpmn2:task>
+    
+    <bpmn2:task id="Task_SelectProducts" name="เลือกสินค้า">
+      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
+    </bpmn2:task>
+    
+    <bpmn2:task id="Task_ShowPromo" name="แสดง Promotions">
+      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
+    </bpmn2:task>
+    
+    <bpmn2:task id="Task_SendOrder" name="ส่งคำสั่งซื้อ">
+      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
+    </bpmn2:task>
+    
+    <bpmn2:task id="Task_Promotion" name="Promotion Management">
+      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
+    </bpmn2:task>
+    
+    <bpmn2:task id="Task_OrderCenter" name="Order Center Management">
+      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
+    </bpmn2:task>
+    
+    <bpmn2:task id="Task_Points" name="แจก Point">
+      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
+    </bpmn2:task>
+    
+    <bpmn2:endEvent id="EndEvent_1" name="สิ้นสุดกระบวนการ">
+      <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
+    </bpmn2:endEvent>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="StartEvent_1" targetRef="Task_Sales"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="Task_Sales" targetRef="Task_CRM"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" sourceRef="Task_CRM" targetRef="Task_Dashboard"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" sourceRef="Task_Dashboard" targetRef="Task_Target"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_5" sourceRef="Task_Target" targetRef="Task_SelectProducts"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_6" sourceRef="Task_SelectProducts" targetRef="Task_ShowPromo"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_7" sourceRef="Task_ShowPromo" targetRef="Task_SendOrder"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_8" sourceRef="Task_SendOrder" targetRef="Task_Promotion"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_9" sourceRef="Task_Promotion" targetRef="Task_OrderCenter"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_10" sourceRef="Task_OrderCenter" targetRef="Task_Points"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_11" sourceRef="Task_Points" targetRef="EndEvent_1"/>
+  </bpmn2:process>
+  
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="BusinessFlowProcess">
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_Sales" bpmnElement="Lane_Sales" isHorizontal="true">
+        <dc:Bounds height="150" width="1100" x="30" y="30"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_KeyAccount" bpmnElement="Lane_KeyAccount" isHorizontal="true">
+        <dc:Bounds height="150" width="1100" x="30" y="180"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_SalesTeams" bpmnElement="Lane_SalesTeams" isHorizontal="true">
+        <dc:Bounds height="150" width="1100" x="30" y="330"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_Promotion" bpmnElement="Lane_Promotion" isHorizontal="true">
+        <dc:Bounds height="150" width="1100" x="30" y="480"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_OMS" bpmnElement="Lane_OMS" isHorizontal="true">
+        <dc:Bounds height="150" width="1100" x="30" y="630"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_GLP" bpmnElement="Lane_GLP" isHorizontal="true">
+        <dc:Bounds height="150" width="1100" x="30" y="780"/>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_1" bpmnElement="StartEvent_1">
+        <dc:Bounds height="36" width="36" x="90" y="87"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="22" width="83" x="67" y="128"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_Task_Sales" bpmnElement="Task_Sales">
+        <dc:Bounds height="80" width="100" x="180" y="65"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="22" width="84" x="188" y="94"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_Task_CRM" bpmnElement="Task_CRM">
+        <dc:Bounds height="80" width="100" x="180" y="215"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="22" width="84" x="188" y="244"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_Task_Dashboard" bpmnElement="Task_Dashboard">
+        <dc:Bounds height="80" width="100" x="330" y="215"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="36" width="84" x="338" y="237"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_Task_Target" bpmnElement="Task_Target">
+        <dc:Bounds height="80" width="100" x="480" y="215"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="36" width="84" x="488" y="237"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_Task_SelectProducts" bpmnElement="Task_SelectProducts">
+        <dc:Bounds height="80" width="100" x="480" y="365"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="22" width="60" x="500" y="394"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_Task_ShowPromo" bpmnElement="Task_ShowPromo">
+        <dc:Bounds height="80" width="100" x="480" y="665"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="36" width="84" x="488" y="687"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_Task_SendOrder" bpmnElement="Task_SendOrder">
+        <dc:Bounds height="80" width="100" x="630" y="365"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="22" width="72" x="644" y="394"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_Task_Promotion" bpmnElement="Task_Promotion">
+        <dc:Bounds height="80" width="100" x="630" y="515"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="36" width="84" x="638" y="537"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_Task_OrderCenter" bpmnElement="Task_OrderCenter">
+        <dc:Bounds height="80" width="100" x="780" y="665"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="36" width="84" x="788" y="687"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_Task_Points" bpmnElement="Task_Points">
+        <dc:Bounds height="80" width="100" x="780" y="815"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="22" width="60" x="800" y="844"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_1" bpmnElement="EndEvent_1">
+        <dc:Bounds height="36" width="36" x="930" y="837"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="36" width="83" x="907" y="878"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNEdge id="_BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="_BPMNShape_StartEvent_1" targetElement="_BPMNShape_Task_Sales">
+        <di:waypoint xsi:type="dc:Point" x="126" y="105"/>
+        <di:waypoint xsi:type="dc:Point" x="180" y="105"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="_BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_Task_Sales" targetElement="_BPMNShape_Task_CRM">
+        <di:waypoint xsi:type="dc:Point" x="230" y="145"/>
+        <di:waypoint xsi:type="dc:Point" x="230" y="215"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="_BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="_BPMNShape_Task_CRM" targetElement="_BPMNShape_Task_Dashboard">
+        <di:waypoint xsi:type="dc:Point" x="280" y="255"/>
+        <di:waypoint xsi:type="dc:Point" x="330" y="255"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="_BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="_BPMNShape_Task_Dashboard" targetElement="_BPMNShape_Task_Target">
+        <di:waypoint xsi:type="dc:Point" x="430" y="255"/>
+        <di:waypoint xsi:type="dc:Point" x="480" y="255"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="_BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="_BPMNShape_Task_Target" targetElement="_BPMNShape_Task_SelectProducts">
+        <di:waypoint xsi:type="dc:Point" x="530" y="295"/>
+        <di:waypoint xsi:type="dc:Point" x="530" y="365"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="_BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="_BPMNShape_Task_SelectProducts" targetElement="_BPMNShape_Task_ShowPromo">
+        <di:waypoint xsi:type="dc:Point" x="530" y="445"/>
+        <di:waypoint xsi:type="dc:Point" x="530" y="665"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="_BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="_BPMNShape_Task_ShowPromo" targetElement="_BPMNShape_Task_SendOrder">
+        <di:waypoint xsi:type="dc:Point" x="580" y="705"/>
+        <di:waypoint xsi:type="dc:Point" x="605" y="705"/>
+        <di:waypoint xsi:type="dc:Point" x="605" y="405"/>
+        <di:waypoint xsi:type="dc:Point" x="630" y="405"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="_BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="_BPMNShape_Task_SendOrder" targetElement="_BPMNShape_Task_Promotion">
+        <di:waypoint xsi:type="dc:Point" x="680" y="445"/>
+        <di:waypoint xsi:type="dc:Point" x="680" y="515"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="_BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="_BPMNShape_Task_Promotion" targetElement="_BPMNShape_Task_OrderCenter">
+        <di:waypoint xsi:type="dc:Point" x="730" y="555"/>
+        <di:waypoint xsi:type="dc:Point" x="755" y="555"/>
+        <di:waypoint xsi:type="dc:Point" x="755" y="705"/>
+        <di:waypoint xsi:type="dc:Point" x="780" y="705"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="_BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="_BPMNShape_Task_OrderCenter" targetElement="_BPMNShape_Task_Points">
+        <di:waypoint xsi:type="dc:Point" x="830" y="745"/>
+        <di:waypoint xsi:type="dc:Point" x="830" y="815"/>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="_BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="_BPMNShape_Task_Points" targetElement="_BPMNShape_EndEvent_1">
+        <di:waypoint xsi:type="dc:Point" x="880" y="855"/>
+        <di:waypoint xsi:type="dc:Point" x="930" y="855"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
