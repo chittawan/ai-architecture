@@ -26,6 +26,7 @@ rule: |
        - Internal Services (with annotations)
        - External Systems
        - Integration Protocols between nodes
+       *พิจารณามาตรฐานการออกแบบ TOP-Down or Left-Right ตามความเหมาะสม*
     5. Apply focus filter if Focus Process is specified.
     6. Highlight critical activities (optional) visually in the diagram.
     7. Optimize layout for readability (avoid overlapping nodes and crossing lines).
