@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="bpmn-js" exporterVersion="17.11.1">
+  <bpmn:collaboration id="Collaboration_1">
+    <bpmn:participant id="Participant_1" name="Sales Process Flow" processRef="Process_1" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_SALE" name="Sales">
+        <bpmn:flowNodeRef>act1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>act2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>act8</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_KA" name="Key Account Management">
+        <bpmn:flowNodeRef>act3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>act7</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_RT" name="Retail">
+        <bpmn:flowNodeRef>act4</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_OMS" name="Order Management System">
+        <bpmn:flowNodeRef>act5</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_PP" name="Privilege &amp; Promotion">
+        <bpmn:flowNodeRef>act5-1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_PM" name="Payment">
+        <bpmn:flowNodeRef>act6</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_AFS" name="After Sales">
+      </bpmn:lane>
+      <bpmn:lane id="Lane_LE" name="Logistics Execution">
+      </bpmn:lane>
+      <bpmn:lane id="Lane_GLP" name="Group Loyalty Platform">
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="act1" name="จัด route แผนเยี่ยมลูกค้า">
+      <bpmn:outgoing>Flow_act1_act1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:startEvent id="act2" name="เบิกของขึ้นรถ">
+      <bpmn:outgoing>Flow_act2_act3</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="act3" name="check-in">
+      <bpmn:incoming>Flow_act2_act3</bpmn:incoming>
+      <bpmn:outgoing>Flow_act3_act4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="act4" name="ขายของหน้าร้าน">
+      <bpmn:incoming>Flow_act3_act4</bpmn:incoming>
+      <bpmn:outgoing>Flow_act4_act5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="act5" name="รับคำสั่งซื้อ">
+      <bpmn:incoming>Flow_act4_act5</bpmn:incoming>
+      <bpmn:incoming>Flow_act5-1_act5</bpmn:incoming>
+      <bpmn:outgoing>Flow_act5_act5-1</bpmn:outgoing>
+      <bpmn:outgoing>Flow_act5_act6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="act5-1" name="ตรวจสอบสิทธิ์ส่วนลด/โปรโมชั่น">
+      <bpmn:incoming>Flow_act5_act5-1</bpmn:incoming>
+      <bpmn:outgoing>Flow_act5-1_act5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="act6" name="รับชำระเงิน">
+      <bpmn:incoming>Flow_act5_act6</bpmn:incoming>
+      <bpmn:outgoing>Flow_act6_act7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="act7" name="check-out">
+      <bpmn:incoming>Flow_act6_act7</bpmn:incoming>
+      <bpmn:outgoing>Flow_act7_act8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="act8" name="เคลียร์เงิน">
+      <bpmn:incoming>Flow_act7_act8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_act1_act1" sourceRef="act1" targetRef="act1" />
+    <bpmn:sequenceFlow id="Flow_act2_act3" sourceRef="act2" targetRef="act3" />
+    <bpmn:sequenceFlow id="Flow_act3_act4" sourceRef="act3" targetRef="act4" />
+    <bpmn:sequenceFlow id="Flow_act4_act5" sourceRef="act4" targetRef="act5" />
+    <bpmn:sequenceFlow id="Flow_act5_act5-1" sourceRef="act5" targetRef="act5-1" />
+    <bpmn:sequenceFlow id="Flow_act5-1_act5" sourceRef="act5-1" targetRef="act5" />
+    <bpmn:sequenceFlow id="Flow_act5_act6" sourceRef="act5" targetRef="act6" />
+    <bpmn:sequenceFlow id="Flow_act6_act7" sourceRef="act6" targetRef="act7" />
+    <bpmn:sequenceFlow id="Flow_act7_act8" sourceRef="act7" targetRef="act8" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="Participant_1_di" bpmnElement="Participant_1" isHorizontal="true">
+        <dc:Bounds x="129" y="80" width="1400" height="720" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_SALE_di" bpmnElement="Lane_SALE" isHorizontal="true">
+        <dc:Bounds x="159" y="80" width="1370" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_KA_di" bpmnElement="Lane_KA" isHorizontal="true">
+        <dc:Bounds x="159" y="160" width="1370" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_RT_di" bpmnElement="Lane_RT" isHorizontal="true">
+        <dc:Bounds x="159" y="240" width="1370" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_OMS_di" bpmnElement="Lane_OMS" isHorizontal="true">
+        <dc:Bounds x="159" y="320" width="1370" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_PP_di" bpmnElement="Lane_PP" isHorizontal="true">
+        <dc:Bounds x="159" y="400" width="1370" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_PM_di" bpmnElement="Lane_PM" isHorizontal="true">
+        <dc:Bounds x="159" y="480" width="1370" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_AFS_di" bpmnElement="Lane_AFS" isHorizontal="true">
+        <dc:Bounds x="159" y="560" width="1370" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_LE_di" bpmnElement="Lane_LE" isHorizontal="true">
+        <dc:Bounds x="159" y="640" width="1370" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_GLP_di" bpmnElement="Lane_GLP" isHorizontal="true">
+        <dc:Bounds x="159" y="720" width="1370" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act1_di" bpmnElement="act1">
+        <dc:Bounds x="212" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="185" y="145" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act2_di" bpmnElement="act2">
+        <dc:Bounds x="312" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="295" y="145" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act3_di" bpmnElement="act3">
+        <dc:Bounds x="400" y="180" width="100" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act4_di" bpmnElement="act4">
+        <dc:Bounds x="550" y="260" width="100" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act5_di" bpmnElement="act5">
+        <dc:Bounds x="700" y="340" width="100" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act5-1_di" bpmnElement="act5-1">
+        <dc:Bounds x="850" y="420" width="120" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act6_di" bpmnElement="act6">
+        <dc:Bounds x="1050" y="500" width="100" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act7_di" bpmnElement="act7">
+        <dc:Bounds x="1200" y="180" width="100" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act8_di" bpmnElement="act8">
+        <dc:Bounds x="1382" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1375" y="145" width="50" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_act1_act1_di" bpmnElement="Flow_act1_act1">
+        <di:waypoint x="230" y="102" />
+        <di:waypoint x="230" y="80" />
+        <di:waypoint x="260" y="80" />
+        <di:waypoint x="260" y="102" />
+        <di:waypoint x="248" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_act2_act3_di" bpmnElement="Flow_act2_act3">
+        <di:waypoint x="330" y="138" />
+        <di:waypoint x="330" y="200" />
+        <di:waypoint x="400" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_act3_act4_di" bpmnElement="Flow_act3_act4">
+        <di:waypoint x="500" y="200" />
+        <di:waypoint x="525" y="200" />
+        <di:waypoint x="525" y="280" />
+        <di:waypoint x="550" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_act4_act5_di" bpmnElement="Flow_act4_act5">
+        <di:waypoint x="650" y="280" />
+        <di:waypoint x="675" y="280" />
+        <di:waypoint x="675" y="360" />
+        <di:waypoint x="700" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_act5_act5-1_di" bpmnElement="Flow_act5_act5-1">
+        <di:waypoint x="800" y="360" />
+        <di:waypoint x="825" y="360" />
+        <di:waypoint x="825" y="440" />
+        <di:waypoint x="850" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_act5-1_act5_di" bpmnElement="Flow_act5-1_act5">
+        <di:waypoint x="850" y="440" />
+        <di:waypoint x="775" y="440" />
+        <di:waypoint x="775" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_act5_act6_di" bpmnElement="Flow_act5_act6">
+        <di:waypoint x="800" y="360" />
+        <di:waypoint x="925" y="360" />
+        <di:waypoint x="925" y="520" />
+        <di:waypoint x="1050" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_act6_act7_di" bpmnElement="Flow_act6_act7">
+        <di:waypoint x="1150" y="520" />
+        <di:waypoint x="1175" y="520" />
+        <di:waypoint x="1175" y="200" />
+        <di:waypoint x="1200" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_act7_act8_di" bpmnElement="Flow_act7_act8">
+        <di:waypoint x="1300" y="200" />
+        <di:waypoint x="1341" y="200" />
+        <di:waypoint x="1341" y="120" />
+        <di:waypoint x="1382" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
