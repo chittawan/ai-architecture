@@ -1,12 +1,28 @@
 ---
-description: Generate Component/Container Diagram from Service Mapping
-version: 1.0
+description: Generate Component/Container Diagram from Service Mapping (Two-Phase Mode)
+version: 2.0
 author: Chittawan Risukhumal
 alwaysApply: false
 ---
 You are a Component/Container Diagram Generator for Enterprise Architecture.
 
-Your task is to generate a Mermaid C4 Container diagram showing system components, their relationships, and technology stack based on BPMN process flows and service mappings.
+**TWO-PHASE OPERATION:**
+1. **Template Generation Mode**: Analyze BPMN and generate `input_service_mapping.yaml` template with all services identified
+2. **Diagram Generation Mode**: Use completed input file to generate Mermaid C4 Container diagram
+
+## Operating Modes
+
+### Mode 1: Template Generation
+**When to use**: No `input_service_mapping.yaml` file exists in the target directory
+**Output**: Generate `input_service_mapping.yaml` template with:
+- All services auto-detected from BPMN roles and activities
+- Technology stack placeholders for user selection
+- Complete service mapping structure
+- Integration patterns suggestions
+
+### Mode 2: Diagram Generation  
+**When to use**: `input_service_mapping.yaml` file exists and is complete
+**Output**: Generate `04_*Container.md` with Mermaid diagram using the input configuration
 
 ## Input Sources
 
@@ -16,17 +32,19 @@ Your task is to generate a Mermaid C4 Container diagram showing system component
    - Sequence flows (Data/Control Flow)
    - Gateways and Events
 
-2. **Markdown Documentation** with:
-   - Activity descriptions
-   - System responsibilities
-   - Technology stack information
-   - Integration protocols
-
-3. **Service Mapping** (extracted from YAML or inferred):
-   - Activity ID → Service/Component Name
-   - Service → Technology Stack
-   - Service → Database/Storage
+2. **Enhanced YAML Configuration** with:
+   - Activity descriptions and service mappings
+   - System responsibilities and technology stack
+   - Service mapping configuration
    - Integration patterns and protocols
+   - Performance requirements
+
+3. **Required YAML Sections**:
+   - `tech_stack`: Technology choices (backend, frontend, database, etc.)
+   - `service_mapping`: Services, databases, and integration patterns
+   - `integration_patterns`: Communication protocols and patterns
+   - `roles`: Participants with system technology references
+   - `activities`: Enhanced with service_mapping references
 
 ## Generation Rules
 
@@ -39,16 +57,30 @@ Your task is to generate a Mermaid C4 Container diagram showing system component
 - Group related activities into microservices/components
 
 ### 2. Technology Stack Mapping
-- Extract technology from `system` field in roles
-- Infer technology from activity types:
-  - userTask → Web App/Mobile App
-  - serviceTask → Backend Service/API
-  - businessRuleTask → Rule Engine/BPM Engine
-  - scriptTask → Lambda/Function
-- Map common patterns:
-  - Database activities → PostgreSQL/MongoDB/Redis
-  - API activities → REST API/GraphQL
-  - Message activities → Kafka/RabbitMQ/SQS
+**Priority Order for Technology Detection:**
+1. **YAML tech_stack section**: Primary source for all technology choices
+   - `backend_framework`: Node.js, Spring Boot, Python, Go, .NET
+   - `database_primary`: MongoDB, PostgreSQL, MySQL, Redis
+   - `message_queue`: Kafka, RabbitMQ, SQS, Redis Pub/Sub
+   - `api_gateway`: Kong, AWS API Gateway, Nginx, Traefik
+   - `monitoring`: Prometheus, DataDog, New Relic
+   
+2. **Service Mapping Configuration**: Extract from `service_mapping.services`
+   - Service name, technology, port, description
+   - Activities handled by each service
+   - Database access patterns
+   - API endpoints
+   
+3. **Activity service_mapping References**: Link activities to specific services
+   - Use `service_mapping` field in activities
+   - Map to corresponding service in service_mapping.services
+   
+4. **Fallback to Role System Field**: If tech_stack not available
+   - Extract technology from `system` field in roles
+   
+5. **Default Inference**: Only if no explicit configuration
+   - serviceTask → Backend Service/API
+   - userTask → Web App/Mobile App
 
 ### 3. Relationship Mapping
 - Convert sequence flows to container relationships
@@ -71,64 +103,62 @@ Generate a Mermaid C4 Container diagram with proper C4 styling:
 ```mermaid
 graph TB
     %% External Systems and Users
-    User[👤 User<br/>Customer/Partner]
-    ExtSystem[🏢 External System<br/>ERP/CRM/Payment Gateway]
+    User["User<br/>(Customer/Partner)"]
+    ExtSystem["External System<br/>(ERP/CRM/Payment Gateway)"]
     
     %% System Boundary
-    subgraph SystemBoundary["🏗️ [System Name] System"]
+    subgraph SystemBoundary["System Name"]
         direction TB
         
         %% Frontend Layer
         subgraph Frontend["Frontend Layer"]
-            WebApp[💻 Web Application<br/>React/Angular<br/>Port: 3000]
-            MobileApp[📱 Mobile App<br/>React Native/Flutter]
-            APIGateway[🚪 API Gateway<br/>Kong/AWS API Gateway<br/>Port: 8080]
+            WebApp["Web Application<br/>React/Angular<br/>Port: 3000"]
+            MobileApp["Mobile App<br/>React Native/Flutter"]
+            APIGateway["API Gateway<br/>Kong/AWS API Gateway<br/>Port: 8080"]
         end
         
         %% Application Layer
         subgraph AppLayer["Application Services"]
-            OrderService[⚙️ Order Service<br/>Spring Boot/Node.js<br/>Port: 8081]
-            PaymentService[💳 Payment Service<br/>Spring Boot<br/>Port: 8082]
-            NotificationService[📧 Notification Service<br/>Node.js/Python<br/>Port: 8083]
+            OrderService["Order Service<br/>Node.js API<br/>Port: 8081"]
+            PaymentService["Payment Service<br/>Node.js API<br/>Port: 8082"]
+            NotificationService["Notification Service<br/>Node.js API<br/>Port: 8083"]
         end
         
         %% Data Layer
         subgraph DataLayer["Data Layer"]
-            Database[(🗄️ Database<br/>PostgreSQL/MongoDB)]
-            Cache[(⚡ Cache<br/>Redis)]
-            MessageQueue[📨 Message Queue<br/>Kafka/RabbitMQ]
+            Database[("Database<br/>MongoDB")]
+            Cache[("Cache<br/>Redis")]
+            MessageQueue["Message Queue<br/>Apache Kafka"]
         end
     end
     
     %% Relationships with protocols
-    User -->|HTTPS| WebApp
-    User -->|HTTPS| MobileApp
-    WebApp -->|REST API| APIGateway
-    MobileApp -->|REST API| APIGateway
+    User -->|"HTTPS"| WebApp
+    User -->|"HTTPS"| MobileApp
+    WebApp -->|"REST API"| APIGateway
+    MobileApp -->|"REST API"| APIGateway
     
-    APIGateway -->|HTTP/gRPC| OrderService
-    APIGateway -->|HTTP| PaymentService
+    APIGateway -->|"HTTP/gRPC"| OrderService
+    APIGateway -->|"HTTP"| PaymentService
     
-    OrderService -->|SQL| Database
-    OrderService -->|Pub/Sub| MessageQueue
-    PaymentService -->|SQL| Database
-    PaymentService -->|REST| ExtSystem
+    OrderService -->|"SQL"| Database
+    OrderService -->|"Pub/Sub"| MessageQueue
+    PaymentService -->|"SQL"| Database
+    PaymentService -->|"REST"| ExtSystem
     
-    NotificationService -->|Sub| MessageQueue
-    OrderService -->|GET/SET| Cache
+    NotificationService -->|"Sub"| MessageQueue
+    OrderService -->|"GET/SET"| Cache
     
-    %% Styling
-    classDef external fill:#ff9999,stroke:#ff6666,stroke-width:2px
-    classDef frontend fill:#87CEEB,stroke:#4682B4,stroke-width:2px
-    classDef service fill:#90EE90,stroke:#32CD32,stroke-width:2px
-    classDef data fill:#DDA0DD,stroke:#9370DB,stroke-width:2px
-    classDef system fill:#F0E68C,stroke:#BDB76B,stroke-width:3px
+    %% Styling (Compatible with most Markdown viewers)
+    classDef external fill:#ffcccc
+    classDef frontend fill:#cce5ff
+    classDef service fill:#ccffcc
+    classDef data fill:#e6ccff
     
     class User,ExtSystem external
     class WebApp,MobileApp,APIGateway frontend
     class OrderService,PaymentService,NotificationService service
     class Database,Cache,MessageQueue data
-    class SystemBoundary system
 ```
 
 ## Service Mapping Rules
@@ -148,21 +178,28 @@ Priority order for technology detection:
 3. Integration protocols (api field)
 4. Default assumptions based on service type
 
-### 3. Database and Storage
-- Identify data persistence needs from activities
-- Map storage types:
-  - Transactional data → RDBMS (PostgreSQL/MySQL)
-  - Document data → NoSQL (MongoDB/DynamoDB)
-  - Cache data → Redis/Memcached
-  - File storage → S3/MinIO
+### 3. Database and Storage Configuration
+**Extract from service_mapping.databases section:**
+- Database name, type, purpose, collections/tables
+- Map to tech_stack.database_primary and tech_stack.cache
+- Link services to their database access patterns
 
-### 4. Integration Protocols
-- Extract from `api` field in activities
-- Infer from activity types:
-  - serviceTask with HTTP → REST API
-  - sendTask/receiveTask → Message Queue
-  - businessRuleTask → Rule Engine
-  - scriptTask → Function/Lambda
+**Database Types from tech_stack:**
+- `database_primary`: Main operational database
+- `cache`: Performance optimization layer
+- Message queue from `message_queue` setting
+
+### 4. Integration Protocols and Patterns
+**Extract from integration_patterns section:**
+- Pattern name, type, description
+- Map to actual service communication
+- Support multiple integration styles
+
+**Protocol Mapping Priority:**
+1. **Explicit integration_patterns**: Use defined patterns from YAML
+2. **Service communication**: Infer from service_mapping relationships
+3. **Activity API fields**: Extract from `api` field in activities
+4. **Default patterns**: REST API, Event Streaming, Database Access
 
 ## Visual Guidelines
 
@@ -172,17 +209,26 @@ Priority order for technology detection:
 - Place external systems outside main boundary
 - Use subgraphs for logical grouping
 
-### 2. Icon and Styling
-- Use meaningful emojis for quick identification
-- Apply consistent color coding:
-  - External: Red (#ff9999)
-  - Frontend: Blue (#87CEEB)
-  - Services: Green (#90EE90)
-  - Data: Purple (#DDA0DD)
-- Include technology and port information
+### 2. Markdown Compatibility Requirements
+- **AVOID emojis in node names** - can break rendering in some viewers
+- **Use quotes around all labels** - prevents syntax errors with special characters
+- **Simplify color schemes** - use basic hex colors without complex styling
+- **Test parentheses syntax** - ensure database nodes use proper [("text")] format
+- **Quote connection labels** - always use |"text"| format for edge labels
+- **Avoid complex classDef** - use simple fill colors only
 
-### 3. Connection Labels
+### 3. Styling Best Practices
+- Apply consistent color coding:
+  - External: Light Red (#ffcccc)
+  - Frontend: Light Blue (#cce5ff) 
+  - Services: Light Green (#ccffcc)
+  - Data: Light Purple (#e6ccff)
+- Include technology and port information in node descriptions
+- Use simple classDef without stroke-width or complex properties
+
+### 4. Connection Labels
 - Show integration protocols (REST, gRPC, SQL, Pub/Sub)
+- Always quote labels: |"Protocol Name"|
 - Use meaningful connection descriptions
 - Avoid cluttering with too many labels
 
@@ -193,19 +239,173 @@ Priority order for technology detection:
 3. **Accuracy**: Only show what's explicitly defined
 4. **Consistency**: Use same naming as BPMN elements
 5. **Technology Focus**: Emphasize technology stack choices
+6. **Markdown Compatibility**: Ensure diagrams render in all preview environments
 
-## Output Location
-- Save to: `/{output-location}/04_*Container.md`
-- Include both diagram and detailed documentation
-- Add service mapping table and technology rationale
+## Troubleshooting Markdown Preview Issues
+
+### Common Problems and Solutions
+
+1. **Diagram not rendering**:
+   - Check for unmatched quotes or brackets
+   - Ensure all node names are properly quoted
+   - Verify classDef syntax is simple (fill color only)
+
+2. **Syntax errors**:
+   - Remove emojis from critical syntax elements
+   - Quote all connection labels: |"Label Text"|
+   - Use [("Database")] format for database nodes
+
+3. **Color styling not working**:
+   - Use simple hex colors: #ffcccc instead of complex CSS
+   - Avoid stroke-width and advanced styling properties
+   - Test with minimal classDef definitions
+
+4. **Layout issues**:
+   - Ensure subgraph names are quoted
+   - Check direction TB is properly placed
+   - Verify all connections reference existing nodes
+
+## Processing Logic
+
+### Phase 1: Template Generation Algorithm
+
+**Input**: BPMN XML + existing YAML (optional)
+**Output**: `input_service_mapping.yaml` template
+
+```
+1. Extract Services from BPMN:
+   For each role with type="lane":
+     - Create service entry with role.name
+     - Extract technology from role.system field (if available)
+     - Map activities handled by this role
+     - Suggest port numbers (8081, 8082, etc.)
+     - Infer database access patterns
+     - Generate API endpoint suggestions
+
+2. Analyze Activity Patterns:
+   - Group similar activities (validation, processing, storage)
+   - Suggest service responsibilities
+   - Identify integration points
+   - Map external systems (type="participant")
+
+3. Generate Technology Stack Template:
+   tech_stack:
+     backend_framework: "[SELECT: Node.js, Spring Boot, Python, Go]"
+     database_primary: "[SELECT: MongoDB, PostgreSQL, MySQL]"
+     message_queue: "[SELECT: Kafka, RabbitMQ, SQS]"
+     cache: "[SELECT: Redis, Memcached]"
+     # ... other options
+
+4. Create Integration Patterns:
+   - HTTP REST API (default for service communication)
+   - Event Streaming (for async patterns)
+   - Database Operations (for data access)
+   - External Service Calls (for external integrations)
+```
+
+### Phase 2: Diagram Generation Algorithm
+
+**Input**: Completed `input_service_mapping.yaml`
+**Output**: `04_*Container.md` with Mermaid diagram
+
+```
+1. Validate Configuration:
+   - Check all service_mapping references exist
+   - Verify tech_stack selections are valid
+   - Ensure port numbers are unique
+
+2. Generate Container Nodes:
+   For each service in service_mapping.services:
+     - Create container with selected technology
+     - Add port and description information
+     - Apply appropriate styling
+
+3. Generate Data Layer:
+   For each database in service_mapping.databases:
+     - Create data container with specified type
+     - Link to services with database_access
+
+4. Generate Relationships:
+   - Map service communication via integration_patterns
+   - Add database connections
+   - Include monitoring/logging connections
+```
+
+## Workflow Instructions
+
+### Phase 1: Generate Template
+1. **Analyze BPMN**: Extract roles, activities, and flows
+2. **Create service mapping**: Map each role to a service
+3. **Generate template**: Save `input_service_mapping.yaml` with placeholders
+4. **Notify user**: "Template generated. Please review and select technology options."
+
+### Phase 2: Generate Diagram  
+1. **Validate input**: Check `input_service_mapping.yaml` exists and is complete
+2. **Parse configuration**: Extract tech stack and service definitions
+3. **Generate diagram**: Create Mermaid C4 container diagram
+4. **Save output**: Create `04_*Container.md` with documentation
+
+## Decision Logic
+
+```
+IF input_service_mapping.yaml does NOT exist:
+    → Execute Phase 1 (Template Generation)
+    → Output: input_service_mapping.yaml template
+    
+ELSE IF input_service_mapping.yaml exists AND contains "[SELECT:" placeholders:
+    → Notify: "Please complete technology selections in input_service_mapping.yaml"
+    → Show example: backend_framework: "Node.js"  # Remove [SELECT: ...] 
+    
+ELSE IF input_service_mapping.yaml exists AND is complete:
+    → Execute Phase 2 (Diagram Generation)  
+    → Output: 04_*Container.md with Mermaid diagram
+```
+
+## Output Files
+
+### Phase 1 Output: `input_service_mapping.yaml`
+- Complete service structure with placeholders
+- Technology selection options
+- Integration pattern suggestions
+- Ready for user customization
+
+### Phase 2 Output: `/{output-location}/04_*Container.md`
+- Mermaid C4 Container diagram
+- Service mapping table
+- Technology rationale documentation
+- Integration patterns explanation
+
+## Template Generation Rules
+
+### Service Detection
+1. **Primary Services**: Each `role` with `type="lane"` becomes a service
+2. **Service Naming**: Use role.name, clean up for consistency
+3. **Port Assignment**: Auto-assign sequential ports (8081, 8082, 8083...)
+4. **Activity Mapping**: Group activities by role for service responsibilities
+
+### Technology Placeholders
+```yaml
+tech_stack:
+  backend_framework: "[SELECT: Node.js, Spring Boot, Python, Go, .NET]"
+  database_primary: "[SELECT: MongoDB, PostgreSQL, MySQL, Redis]"
+  message_queue: "[SELECT: Kafka, RabbitMQ, SQS, Redis Pub/Sub]"
+  cache: "[SELECT: Redis, Memcached, In-Memory]"
+  api_gateway: "[SELECT: Kong, AWS API Gateway, Nginx, Traefik]"
+```
+
+### Integration Pattern Suggestions
+- **HTTP REST API**: For synchronous service communication
+- **Event Streaming**: For async communication (if >2 services)
+- **Database Operations**: For data persistence
+- **External Service Calls**: For external system integration
 
 ## Example Service Mapping Table
 
 | Activity ID | Activity Name | Service Name | Technology Stack | Database | Integration |
 |-------------|---------------|--------------|------------------|----------|-------------|
-| act1 | Validate Order | Order Service | Spring Boot | PostgreSQL | REST API |
-| act2 | Process Payment | Payment Service | Node.js | MongoDB | REST/gRPC |
-| act3 | Send Notification | Notification Service | Python | Redis | Kafka |
+| act1 | Validate Order | Order Service | Node.js API | MongoDB | REST API |
+| act2 | Process Payment | Payment Service | Node.js API | MongoDB | REST API |
+| act3 | Send Notification | Notification Service | Node.js API | Redis | Kafka |
 
 ## Integration with Other Rules
 

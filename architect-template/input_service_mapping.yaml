@@ -1,0 +1,217 @@
+# Enhanced Template for System Architect Rules v2.1
+# Includes Service Mapping and Technology Stack Configuration
+
+**output-location : /{this}/*
+
+# Process metadata
+process:
+  name: Template Process with Service Mapping
+  description: ตัวอย่างการประมวลผล request พร้อม service mapping / Request processing with service mapping
+
+# Technology Stack Configuration
+tech_stack:
+  # Primary technology choices
+  backend_framework: Node.js  # Options: Node.js, Spring Boot, Python, Go, .NET
+  frontend_framework: React   # Options: React, Angular, Vue, React Native
+  database_primary: MongoDB   # Options: MongoDB, PostgreSQL, MySQL, Redis
+  message_queue: Kafka        # Options: Kafka, RabbitMQ, SQS, Redis Pub/Sub
+  cache: Redis               # Options: Redis, Memcached, In-Memory
+  
+  # Infrastructure & DevOps
+  api_gateway: Kong          # Options: Kong, AWS API Gateway, Nginx, Traefik
+  monitoring: Prometheus     # Options: Prometheus, DataDog, New Relic
+  logging: ELK              # Options: ELK, Fluentd, CloudWatch
+  deployment: Kubernetes     # Options: Kubernetes, Docker, AWS ECS, Serverless
+
+# Service Mapping Configuration
+service_mapping:
+  # Map activities to specific services
+  services:
+    - name: API Gateway Service
+      technology: Kong/Node.js
+      port: 8080
+      description: รับและจัดการ API requests จากภายนอก
+      activities: [act2]  # Activities handled by this service
+      
+    - name: Processing Service
+      technology: Node.js API
+      port: 8081
+      description: ประมวลผลตามกฎทางธุรกิจ
+      activities: [act3]
+      database_access: [orders, products]
+      api_endpoints: ["/api/v1/process", "/api/v1/validate"]
+      
+    - name: Data Service
+      technology: Node.js API
+      port: 8082
+      description: จัดการข้อมูลและ database operations
+      activities: [act4]
+      database_access: [orders, audit_logs]
+      
+  # Database configuration
+  databases:
+    - name: Main Database
+      type: MongoDB
+      purpose: Primary data storage
+      collections: [orders, products, customers, audit_logs]
+      
+    - name: Cache Layer
+      type: Redis
+      purpose: Performance optimization
+      data_types: [session, config, temp_results]
+      
+    - name: Message Queue
+      type: Apache Kafka
+      purpose: Async communication
+      topics: [order_events, notification_events, audit_events]
+
+# Integration patterns
+integration_patterns:
+  - name: API Communication
+    type: HTTP REST
+    description: Synchronous service-to-service communication
+    
+  - name: Event Streaming
+    type: Kafka Events
+    description: Asynchronous event-driven communication
+    
+  - name: Database Access
+    type: MongoDB Driver
+    description: Direct database operations
+    
+  - name: Caching Strategy
+    type: Redis Cache
+    description: Read-through and write-behind caching
+
+# Participants/Roles
+roles:
+  - id: USER
+    name: User/Customer
+    type: participant
+    responsibility: Request Initiator
+    description: ผู้ใช้งานระบบหรือลูกค้าที่เริ่มต้นการทำงาน
+    
+  - id: API_GW
+    name: API Gateway
+    type: lane
+    responsibility: Request Handler
+    system: Kong/Node.js  # Uses tech_stack.api_gateway
+    description: รับและจัดการ API requests จากภายนอก
+    
+  - id: PROC_SVC
+    name: Processing Service
+    type: lane
+    responsibility: Business Logic
+    system: Node.js API  # Uses tech_stack.backend_framework
+    description: ประมวลผลตามกฎทางธุรกิจ
+    
+  - id: DATA_SVC
+    name: Data Service
+    type: lane
+    responsibility: Data Storage
+    system: Node.js API  # Uses tech_stack.backend_framework
+    description: จัดเก็บและดึงข้อมูล
+
+# Process Activities
+activities:
+  - id: act1
+    role: USER
+    name: ส่ง Request
+    eventType: start
+    description: ผู้ใช้ส่ง request เข้าสู่ระบบ
+    
+  - id: act2
+    role: API_GW
+    name: รับ Request
+    type: serviceTask
+    sla: 100ms
+    description: API Gateway รับและตรวจสอบ request
+    service_mapping: API Gateway Service  # References service_mapping.services
+    
+  - id: gw1
+    role: API_GW
+    name: Request Valid?
+    type: gateway
+    
+  - id: act3
+    role: PROC_SVC
+    name: ประมวลผล
+    type: serviceTask
+    sla: 2s
+    risk: medium
+    system: Processing Service  # References service_mapping.services
+    api: /api/v1/process
+    description: ประมวลผลตามกฎทางธุรกิจ
+    service_mapping: Processing Service
+    
+  - id: act4
+    role: DATA_SVC
+    name: บันทึกข้อมูล
+    type: serviceTask
+    sla: 500ms
+    description: บันทึกผลลัพธ์ลงฐานข้อมูล
+    service_mapping: Data Service
+    
+  - id: act5
+    role: API_GW
+    name: ส่ง Response
+    eventType: end
+    description: ส่งผลลัพธ์กลับไปยังผู้ใช้
+    service_mapping: API Gateway Service
+    
+  - id: act_error
+    role: API_GW
+    name: ส่ง Error Response
+    eventType: end
+    description: ส่ง error message กลับไปยังผู้ใช้
+    service_mapping: API Gateway Service
+
+# Gateways
+gateways:
+  - id: gw1
+    name: Request Valid?
+    type: exclusive
+    role: API_GW
+    defaultFlow: flow_error
+
+# Process Flows
+flows:
+  - from: act1
+    to: act2
+    
+  - from: act2
+    to: gw1
+    
+  - id: flow_valid
+    from: gw1
+    to: act3
+    name: Valid
+    condition: request.isValid == true
+    
+  - id: flow_error
+    from: gw1
+    to: act_error
+    name: Invalid
+    
+  - from: act3
+    to: act4
+    
+  - from: act4
+    to: act5
+
+# Deployment configuration (optional)
+deployment:
+  environment: kubernetes
+  replicas:
+    api_gateway: 2
+    processing_service: 3
+    data_service: 2
+  resources:
+    cpu_limit: 1000m
+    memory_limit: 1Gi
+    
+# Performance requirements (optional)
+performance:
+  target_tps: 1000  # Transactions per second
+  max_latency: 500ms
+  availability: 99.9%
