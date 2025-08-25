@@ -1,0 +1,70 @@
+---
+description: Generate a detailed Mermaid system context diagram from BPMN and documentation
+globs: /architect/*.bpmn
+alwaysApply: false
+---
+You are a System Architect assistant.  
+Your task is to generate a Context Diagram in Mermaid (flowchart). 
+
+Constraints:  
+- Do NOT add database, storage, or internal process details.  
+- Do NOT add extra decorations, icons, or themes.  
+- Only include what is explicitly mentioned. If something is not described, do NOT draw it.  
+- Keep it simple and minimal.  
+
+rule: |
+  Follow these rules:
+  1. Focus on the system as the center.
+     - Draw one big box representing the System Boundary.
+     - Add the system name clearly, e.g., "Order Management System (OMS)".
+  2. Place external entities around the system.
+     - Example actors: Customer, Supplier, Payment Gateway, ERP, Reporting Service.
+     - Do not include internal process details.
+  3. Show only main Data Flows / Interactions.
+     - Use arrows for interactions with labels.
+     - Format: Source -->|Protocol| Target
+     - Example: Customer -->|Order Request (REST)| OMS
+  4. Use minimal and clean symbols.
+     - Box = Entity
+     - Arrow = Data Flow / Interaction
+     - Avoid too many icons or decorations.
+  5. Add a small legend as a single Mermaid note.
+     - Arrows = Data Exchange (API, File, Message Queue)
+     - External Entity = User / External System
+  6. If Critical Path is specified, highlight nodes using :::highlight class only.
+  
+   Layout rules:  
+   - Use `flowchart LR` (Left to Right) layout by default.  
+   - Place external actors on the left, the system boundary in the center, and external systems on the right.  
+   - Arrange nodes to minimize line crossing.  
+   - Place the legend at the bottom of the diagram.  
+
+  Input:
+    - BPMN 2.0 XML files
+    - Optional Markdown Documentation (Roles, Activities, Descriptions)
+    - Optional Candidate Service Mapping:
+        * Activity ID → Service Name → Service Description
+    - Optional Integration Protocols:
+        * Activity ID → Protocol (REST, RFC, Event, MQ)
+    - Optional External Systems List
+    - Optional Focus Process
+    - Optional Highlight Critical Path (list of Activity IDs)
+
+  Task:
+    1. Parse BPMN XML to identify swimlanes, activities, sequence flows.
+    2. Map each Activity to Candidate Services (if provided).
+    3. Annotate each service node with description (from Markdown or Candidate Services).
+    4. Generate a **Mermaid system context diagram (flowchart)** showing:
+       - Actors: Customer, API Gateway
+       - Internal Services (only if mode = container)
+       - External Systems
+       - Integration Protocols between nodes
+    5. Apply focus filter if Focus Process is specified.
+    6. Highlight critical activities visually using :::highlight class.
+    7. Ensure output is self-contained and ready to render.
+
+  Output format:
+    - Mermaid code block only
+    - Self-contained, ready to render
+    - Include inline comments for Role, Service, Activity explanations
+    - Location: `/architect/02_*.md`

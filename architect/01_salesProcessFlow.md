@@ -1,94 +1,87 @@
-# Sales Process Flow - BPMN Documentation
+# Sales Process Flow Documentation
 
 ## Overview
-This document describes the Sales Process Flow based on the business requirements defined in the input specification. The process covers the complete sales cycle from route planning to payment clearing, including privilege and promotion verification.
+This document describes the Sales Process Flow, generated from the YAML input specification using SA_001 rule. The process covers the complete retail sales workflow from initial product preparation to final payment clearing.
 
-## Process Roles (Swimlanes)
+## Roles
 
 | Role ID | Role Name | Responsibility | Description |
 |---------|-----------|----------------|-------------|
 | SALE | Sales | Operation | Responsible for defining requirements and initial customer interaction |
 | KA | Key Account Management | CRM Management | Manages key accounts and monitors sales targets |
-| RT | Retail | CRM Management | เบิกของขึ้นรถ แล้วไปขายหน้าร้าน กลับมาเคลียร์เงิน คืนของ |
+| RT | Retail | SalesOrder on Vechical-stock | เบิกของขึ้นรถ แล้วไปขายหน้าร้าน กลับมาเคลียร์เงิน คืนของ |
 | OMS | Order Management System | - | Order Center, Order Management, ทุกคำสั่งซื่อจะต้องส่งข้อมูลมาที่นี่ |
 | AFS | After Sales | - | จัดการบริการหลังการขาย, รับคืนสินค้า/ลดหนี้ ลดหนี้/เพิ่มหนี้ |
 | PP | Privilege & Promotion | - | จัดการบริการหลังการขาย, รับคืนสินค้า/ลดหนี้ ลดหนี้/เพิ่มหนี้ |
-| PM | Payment | - | Payment processing and management |
-| LE | Logistics Execution | - | Logistics and delivery execution |
-| GLP | Group Loyalty Platform | - | Customer loyalty program management |
+| PM | Payment | - | - |
+| LE | Logistics Execution | - | - |
+| GLP | Group Loyalty Platform | - | - |
 
-## Process Activities
+## Activities
 
 | Activity ID | Activity Name | Role | Event Type | Description |
 |-------------|---------------|------|------------|-------------|
-| act1 | จัด route แผนเยี่ยมลูกค้า | SALE | Start | จัด route แผนเยี่ยมลูกค้า ประจำวัน |
-| act2 | เบิกของขึ้นรถ | SALE | Start | เบิกของขึ้นรถ ตามแผนที่วางไว้ |
-| act3 | check-in | KA | Task | check-in หน้าร้านลูกค้า / if no ลูกค้าให้ไปขายหน้าร้าน |
-| act4 | ขายของหน้าร้าน | RT | Task | ขายของหน้าร้าน |
-| act5 | รับคำสั่งซื้อ | OMS | Task | รับคำสั่งซื้อ |
-| act5-1 | ตรวจสอบสิทธิ์ส่วนลด/โปรโมชั่น | PP | Task | ตรวจสอบสิทธิ์ส่วนลด/โปรโมชั่น |
+| act1 | เบิกของขึ้นรถ | SALE | Start | เบิกของขึ้นรถ ตามแผนที่วางไว้ |
+| act2 | check-in | KA | Task | check-in หน้าร้านลูกค้า / if no ลูกค้าให้ไปขายหน้าร้าน |
+| act3 | ขายของหน้าร้าน | RT | Task | ขายของหน้าร้าน |
+| act4 | รับคำสั่งซื้อ | OMS | Task | รับคำสั่งซื้อ |
+| act5 | ตรวจสอบสิทธิ์ส่วนลด/โปรโมชั่น | PP | Task | ตรวจสอบสิทธิ์ส่วนลด/โปรโมชั่น |
 | act6 | รับชำระเงิน | PM | Task | รับชำระเงิน |
 | act7 | check-out | KA | Task | check-out ออกจากร้านลูกค้า |
 | act8 | เคลียร์เงิน | SALE | End | เคลียร์เงินหลังเลิกงาน |
 
-## Process Flow
+## Flows
 
 | From Activity | To Activity | Flow Description |
 |---------------|-------------|------------------|
-| act1 | act1 | Self-loop for route planning |
-| act2 | act3 | เบิกของขึ้นรถ → check-in |
-| act3 | act4 | check-in → ขายของหน้าร้าน |
-| act4 | act5 | ขายของหน้าร้าน → รับคำสั่งซื้อ |
-| act5 | act5-1 | รับคำสั่งซื้อ → ตรวจสอบสิทธิ์ส่วนลด/โปรโมชั่น |
-| act5-1 | act5 | ตรวจสอบสิทธิ์ส่วนลด/โปรโมชั่น → รับคำสั่งซื้อ (validation loop) |
-| act5 | act6 | รับคำสั่งซื้อ → รับชำระเงิน |
-| act6 | act7 | รับชำระเงิน → check-out |
-| act7 | act8 | check-out → เคลียร์เงิน |
+| act1 → act2 | เบิกของขึ้นรถ → check-in | Start process with product preparation, then check-in at customer location |
+| act2 → act3 | check-in → ขายของหน้าร้าน | After check-in, proceed to retail sales activities |
+| act3 → act4 | ขายของหน้าร้าน → รับคำสั่งซื้อ | From retail sales to order management |
+| act4 → act5 | รับคำสั่งซื้อ → ตรวจสอบสิทธิ์ส่วนลด/โปรโมชั่น | Check privileges and promotions for the order |
+| act5 → act4 | ตรวจสอบสิทธิ์ส่วนลด/โปรโมชั่น → รับคำสั่งซื้อ | Return to order management after privilege check |
+| act4 → act6 | รับคำสั่งซื้อ → รับชำระเงิน | Process payment after order confirmation |
+| act6 → act7 | รับชำระเงิน → check-out | Check-out after payment completion |
+| act7 → act8 | check-out → เคลียร์เงิน | Final money clearing process |
 
-## Process Description
+## Process Summary
 
-The Sales Process Flow represents a comprehensive sales cycle in a retail/distribution environment with privilege validation:
+The Sales Process Flow represents a comprehensive retail sales workflow with the following key phases:
 
-1. **Route Planning (act1)**: Sales team plans daily customer visit routes (self-loop indicates iterative/recurring planning)
-2. **Inventory Loading (act2)**: Sales staff loads products onto vehicles according to the planned route
-3. **Customer Check-in (act3)**: Key Account Management performs check-in at customer location, with fallback to direct retail sales if no customer is available
-4. **Retail Sales (act4)**: Retail team conducts front-of-store sales activities
-5. **Order Processing (act5)**: Order Management System receives and processes purchase orders
-6. **Privilege Validation (act5-1)**: Privilege & Promotion system validates discounts and promotional offers (creates validation loop with order processing)
-7. **Payment Processing (act6)**: Payment system handles transaction processing
-8. **Customer Check-out (act7)**: Key Account Management performs check-out from customer location
-9. **Cash Clearing (act8)**: Sales team clears cash and reconciles accounts at end of day
+1. **Preparation Phase**: Sales team prepares products for delivery (act1)
+2. **Customer Engagement**: Key Account Management checks in at customer location (act2)
+3. **Sales Execution**: Retail team conducts front-of-store sales activities (act3)
+4. **Order Processing**: Order Management System handles purchase orders (act4)
+5. **Promotion Validation**: Privilege & Promotion system validates discounts and promotions (act5)
+6. **Payment Processing**: Payment system handles financial transactions (act6)
+7. **Customer Exit**: Key Account Management handles customer check-out (act7)
+8. **Settlement**: Sales team performs end-of-day money clearing (act8)
 
-## Key Process Features
-
-### Validation Loop
-- **act5 ↔ act5-1**: The process includes a validation loop between order processing and privilege verification, ensuring proper discount/promotion validation before payment processing
-- This loop allows for iterative validation and correction of promotional offers
-
-### Conditional Flow
-- **act3**: Enhanced check-in process with conditional logic - if no customer is available, the process can proceed to direct retail sales
-
-### Multi-Role Coordination
-- The process spans 9 different roles/systems, demonstrating complex organizational coordination
-- Clear handoffs between departments ensure accountability and proper process flow
+The process includes a feedback loop between order management (act4) and promotion validation (act5), allowing for multiple promotion checks during the order process.
 
 ## Technical Notes
 
-- **Role Assignment**: Note that act1 references "SALE Manager" in the original input but is assigned to SALE role for consistency
-- **Flow Validation**: All sequence flows are properly validated with no orphaned activities
-- **Event Types**: Proper BPMN event typing with Start events (act1, act2), Tasks (act3-act7), and End event (act8)
+- **BPMN File**: `01_salesProcessFlow.bpmn`
+- **Compatible with**: bpmn.io and standard BPMN 2.0 viewers
+- **Swimlanes**: Each role is represented as a separate lane in the process diagram
+- **Event Types**: Includes start event (act1) and end event (act8)
+- **Loop Handling**: The act4 ↔ act5 relationship creates a proper feedback loop for promotion validation
+- **No Duplicate IDs**: All activity and flow IDs are unique and consistent
+- **Valid References**: All sequence flows reference existing activity IDs
 
-## Future Enhancements
+## Future Mermaid Diagrams
 
-This documentation can be extended with:
-- **System Context Diagram**: Showing external systems and stakeholders
-- **Sequence Diagrams**: Detailed interaction flows between roles
-- **Entity Relationship Diagrams**: Data models supporting the process
-- **Integration Points**: API specifications and system interfaces
-- **Exception Handling**: Error flows and rollback procedures
-- **Performance Metrics**: KPIs and measurement points
+This documentation can be extended with additional diagrams:
+
+### System Context Diagram (Mermaid)
+*To be generated: High-level view of system interactions and external entities*
+
+### Sequence Diagram (Mermaid)
+*To be generated: Detailed interaction sequence between roles over time*
+
+### Entity Relationship Diagram (ERD)
+*To be generated: Data model supporting the sales process*
 
 ---
-*Generated from: architect/input_roles_act.yaml*  
-*BPMN File: architect/salesProcessFlow.bpmn*  
-*Last Updated: $(date)*
+
+*Generated by System Architect Design Rule SA_001*  
+*Compatible with bpmn.io and enterprise modeling tools*

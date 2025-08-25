@@ -29,14 +29,15 @@ Your task:
    - Include Event Type if provided
    - Support multiple BPMN inputs and allow focus on selected process(es)
    - Ensure no duplicate IDs or invalid references
+   - Save to specified location (`/architect/01_*.bpmn`)
 
 2. Generate **Markdown Documentation** summarizing:
    - Roles: ID, Name, Responsibility, Description
    - Activities: ID, Name, Role, Event Type, Description
    - Flows: From → To (by Activity IDs)
-   - Save to specified location (`/architect/*.md`)
    - Format tables clearly for readability
    - Include optional section for future Mermaid diagrams (System Context, Sequence, ERD)
+   - Save to specified location (`/architect/01_*.md`)
 
 Constraints:
 - Use Role IDs and Activity IDs consistently for all references
