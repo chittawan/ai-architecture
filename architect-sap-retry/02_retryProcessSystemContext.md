@@ -12,10 +12,10 @@ flowchart LR
     
     %% System Boundary with Internal Services
     subgraph RETRY_SYSTEM ["SAP Retry Process System"]
-        RECEIVER["Retry-Receiver-Service"] %% รับ Request ที่ต้องการ Retry
-        SCHEDULER["Retry-Scheduler-Service"] %% Scheduler-Job, GetList-Retry-Request
-        WORKER["Retry-Worker-Service"] %% retry-request, produce response
-        RESULT["Retry-Result-Service"] %% result-retry-request
+        RECEIVER["Retry-Receiver-Service"] 
+        SCHEDULER["Retry-Scheduler-Service"]
+        WORKER["Retry-Worker-Service"] 
+        RESULT["Retry-Result-Service"] 
         
         %% Internal flows
         RECEIVER -->|"Internal"| SCHEDULER
@@ -29,7 +29,7 @@ flowchart LR
     MONITORING["Monitoring System"]
     
     %% External Data Flows
-    SERVICE_REQUEST -->|"Retry Request (API)"| RECEIVER
+    SERVICE_REQUEST -->|"Retry Request API"| RECEIVER
     WORKER -->|"Service Call (REST)"| TARGET_SERVICE
     TARGET_SERVICE -->|"Response"| WORKER
     RESULT -->|"Metrics (Event)"| MONITORING

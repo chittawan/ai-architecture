@@ -31,7 +31,7 @@ This document describes the SAP Retry Process Flow, which handles retry mechanis
 | act2 (Retry-Receiver-Service) | act3 (Retry-Scheduler-Service) | Received request flows to scheduler |
 | act3 (Retry-Scheduler-Service) | act4 (Retry-Worker-Service) | Scheduled request flows to worker |
 | act4 (Retry-Worker-Service) | act5 (Retry-Result-Service) | Worker results flow to result service |
-| act5 (Retry-Result-Service) | act1 (Request-Retry) | Results loop back to input for potential re-processing |
+| act5 (Retry-Result-Service) | act2 (Retry-Receiver-Service) | Results loop back to receiver for potential re-processing |
 
 ## Process Description
 

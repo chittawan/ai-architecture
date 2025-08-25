@@ -16,10 +16,10 @@ roles:
 
 activities:
   - id: act1
-    role: ServiceRequestRetry (Input)
+    role: ServiceRequestRetry
     name: Request-Retry
     eventType: Start
-    description: ServiceRequestRetry
+    description: ServiceRequestRetry, requester, intput and want to retry-request
   - id: act2
     role: Retry-Receiver-Service
     name: Retry-Receiver-Service
