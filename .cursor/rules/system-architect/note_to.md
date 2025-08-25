@@ -5,7 +5,7 @@
 - ✅ sa_002.mdc - BPMN to System Context Diagram
 - ✅ sa_999.mdc - Auto Regeneration Tool
 - ✅ sa_003.mdc - BPMN to Sequence Diagram
-- [ ] สร้าง sa_004.mdc - Generate Component/Container Diagram จาก Service Mapping
+- ✅ สร้าง sa_004.mdc - Generate Component/Container Diagram จาก Service Mapping
 - [ ] สร้าง sa_005.mdc - Generate ERD/Data Model จาก Business Entities
 - [ ] สร้าง sa_validate.mdc - Validate YAML input structure และ BPMN output
 - [ ] สร้าง sa_template.mdc - Generate project template structure อัตโนมัติ
@@ -32,7 +32,7 @@
   - Include conditional flows
   - Add timing annotations
 
-- [ ] **sa_004.mdc** - Component/Container Diagram
+- [x] **sa_004.mdc** - Component/Container Diagram
   - Map Activities to Services
   - Show technology stack
   - Generate C4 Container diagram
