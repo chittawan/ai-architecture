@@ -1,30 +1,136 @@
-**output-location : /architect-{this}/*
+# Template for System Architect Rules v2.0
+# This template demonstrates both basic and advanced features
+# All advanced features are optional - basic structure still works
 
+**output-location : /{this}/*
+
+# Process metadata (optional but recommended)
+process:
+  name: Template Process
+  description: ตัวอย่างการประมวลผล request พื้นฐาน / Basic request processing example
+
+# Participants/Roles (enhanced version)
 roles:
-  - id: SALE
-    name: Sales
-    responsibility: Operation
-    description: Responsible for defining requirements and initial customer interaction
-  - id: KA
-    name: Key Account Management
-    responsibility: CRM Management
-    description: Manages key accounts and monitors sales targets
-  
+  - id: USER
+    name: User/Customer
+    type: participant  # participant = external, lane = internal (default)
+    responsibility: Request Initiator
+    description: ผู้ใช้งานระบบหรือลูกค้าที่เริ่มต้นการทำงาน
+    
+  - id: API
+    name: API Gateway
+    type: lane
+    responsibility: Request Handler
+    system: Kong/AWS API Gateway  # optional: specify technology
+    description: รับและจัดการ API requests จากภายนอก
+    
+  - id: PROC
+    name: Processing Service
+    type: lane
+    responsibility: Business Logic
+    system: Spring Boot Service  # optional
+    description: ประมวลผลตามกฎทางธุรกิจ
+    
+  - id: DB
+    name: Database
+    type: lane
+    responsibility: Data Storage
+    system: PostgreSQL  # optional
+    description: จัดเก็บและดึงข้อมูล
 
+# Process Activities (enhanced version)
 activities:
   - id: act1
-    role: SALE
-    name: เบิกของขึ้นรถ
-    eventType: Start
-    description: เบิกของขึ้นรถ ตามแผนที่วางไว้
+    role: USER
+    name: ส่ง Request
+    eventType: start  # start event
+    description: ผู้ใช้ส่ง request เข้าสู่ระบบ
+    
   - id: act2
-    role: KA
-    name: check-in
-    eventType: Task
-    description: check-in หน้าร้านลูกค้า / if no ลูกค้าให้ไปขายหน้าร้าน
+    role: API
+    name: รับ Request
+    type: serviceTask  # optional: specify task type
+    sla: 100ms  # optional: performance requirement
+    description: API Gateway รับและตรวจสอบ request
+    
+  - id: gw1
+    role: API
+    name: Request Valid?
+    type: gateway  # gateway element (will be processed separately)
+    
+  - id: act3
+    role: PROC
+    name: ประมวลผล
+    type: serviceTask
+    sla: 2s
+    risk: medium  # optional: risk level (high/medium/low)
+    system: Order Service  # optional: specific system
+    api: /api/v1/process  # optional: API endpoint
+    description: ประมวลผลตามกฎทางธุรกิจ
+    
+  - id: act4
+    role: DB
+    name: บันทึกข้อมูล
+    type: serviceTask
+    sla: 500ms
+    description: บันทึกผลลัพธ์ลงฐานข้อมูล
+    
+  - id: act5
+    role: API
+    name: ส่ง Response
+    eventType: end
+    description: ส่งผลลัพธ์กลับไปยังผู้ใช้
+    
+  - id: act_error
+    role: API
+    name: ส่ง Error Response
+    eventType: end
+    description: ส่ง error message กลับไปยังผู้ใช้
 
+# Gateways (optional - new feature)
+gateways:
+  - id: gw1
+    name: Request Valid?
+    type: exclusive  # exclusive (XOR) gateway
+    role: API
+    defaultFlow: flow_error  # default path if no condition matches
+
+# Process Flows (enhanced version)
 flows:
   - from: act1
-    to: act1
+    to: act2
+    
   - from: act2
+    to: gw1
+    
+  - id: flow_valid
+    from: gw1
     to: act3
+    name: Valid
+    condition: request.isValid == true  # optional: condition
+    
+  - id: flow_error
+    from: gw1
+    to: act_error
+    name: Invalid
+    
+  - from: act3
+    to: act4
+    
+  - from: act4
+    to: act5
+
+# Subprocesses (optional - new feature)
+# subprocesses:
+#   - id: sub1
+#     name: Validate Details
+#     role: API
+#     type: embedded
+#     activities: [act2_1, act2_2]
+
+# Messages/Signals (optional - new feature)
+# messages:
+#   - id: msg1
+#     name: Processing Complete
+#     from: PROC
+#     to: act5

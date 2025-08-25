@@ -1,131 +1,229 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
   <bpmn:collaboration id="Collaboration_1">
-    <bpmn:participant id="Participant_1" name="SAP Retry Process" processRef="Process_1" />
+    <bpmn:participant id="Participant_ServiceRequestRetry" name="Service-Request-Retry" processRef="Process_RetryFlow" />
+    <bpmn:participant id="Participant_RetryReceiverService" name="Retry-Receiver-Service" processRef="Process_RetryReceiverService" />
+    <bpmn:participant id="Participant_RetrySchedulerService" name="Retry-Scheduler-Service" processRef="Process_RetrySchedulerService" />
+    <bpmn:participant id="Participant_RetryWorkerService" name="Retry-Worker-Service" processRef="Process_RetryWorkerService" />
+    <bpmn:participant id="Participant_ExternalService" name="External-Service" processRef="Process_ExternalService" />
+    <bpmn:participant id="Participant_RetryResultService" name="Retry-Result-Service" processRef="Process_RetryResultService" />
+    <bpmn:messageFlow id="MessageFlow_1" sourceRef="Activity_act1" targetRef="Activity_act2" />
+    <bpmn:messageFlow id="MessageFlow_2" sourceRef="Activity_act2" targetRef="Activity_act3" />
+    <bpmn:messageFlow id="MessageFlow_3" sourceRef="Activity_act3" targetRef="Activity_act4" />
+    <bpmn:messageFlow id="MessageFlow_4" sourceRef="Activity_act4" targetRef="Activity_act5" />
+    <bpmn:messageFlow id="MessageFlow_5" sourceRef="Activity_act5" targetRef="Activity_act4" />
+    <bpmn:messageFlow id="MessageFlow_6" sourceRef="Activity_act4" targetRef="Activity_act6" />
   </bpmn:collaboration>
-  <bpmn:process id="Process_1" isExecutable="true">
-    <bpmn:laneSet id="LaneSet_1">
-      <bpmn:lane id="Lane_ServiceRequestRetry_Input" name="ServiceRequestRetry (Input)">
-        <bpmn:flowNodeRef>act1</bpmn:flowNodeRef>
-      </bpmn:lane>
-      <bpmn:lane id="Lane_Retry-Receiver-Service" name="Retry-Receiver-Service">
-        <bpmn:flowNodeRef>act2</bpmn:flowNodeRef>
-      </bpmn:lane>
-      <bpmn:lane id="Lane_Retry-Scheduler-Service" name="Retry-Scheduler-Service">
-        <bpmn:flowNodeRef>act3</bpmn:flowNodeRef>
-      </bpmn:lane>
-      <bpmn:lane id="Lane_Retry-Worker-Service" name="Retry-Worker-Service">
-        <bpmn:flowNodeRef>act4</bpmn:flowNodeRef>
-      </bpmn:lane>
-      <bpmn:lane id="Lane_Retry-Result-Service" name="Retry-Result-Service">
-        <bpmn:flowNodeRef>act5</bpmn:flowNodeRef>
-      </bpmn:lane>
-    </bpmn:laneSet>
-    <bpmn:startEvent id="act1" name="Request-Retry">
-      <bpmn:outgoing>Flow_act1_act2</bpmn:outgoing>
+  
+  <bpmn:process id="Process_RetryFlow" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_act0" name="Service-Request-Retry">
+      <bpmn:outgoing>Flow_act0_act1</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:task id="act2" name="Retry-Receiver-Service">
-      <bpmn:incoming>Flow_act1_act2</bpmn:incoming>
-      <bpmn:incoming>Flow_act5_act2</bpmn:incoming>
-      <bpmn:outgoing>Flow_act2_act3</bpmn:outgoing>
+    <bpmn:task id="Activity_act1" name="Request-Retry">
+      <bpmn:incoming>Flow_act0_act1</bpmn:incoming>
+      <bpmn:outgoing>Flow_act1_out</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:task id="act3" name="Retry-Scheduler-Service">
-      <bpmn:incoming>Flow_act2_act3</bpmn:incoming>
-      <bpmn:outgoing>Flow_act3_act4</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="act4" name="Retry-Worker-Service">
-      <bpmn:incoming>Flow_act3_act4</bpmn:incoming>
-      <bpmn:outgoing>Flow_act4_act5</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="act5" name="Retry-Result-Service">
-      <bpmn:incoming>Flow_act4_act5</bpmn:incoming>
-      <bpmn:outgoing>Flow_act5_act2</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_act1_act2" sourceRef="act1" targetRef="act2" />
-    <bpmn:sequenceFlow id="Flow_act2_act3" sourceRef="act2" targetRef="act3" />
-    <bpmn:sequenceFlow id="Flow_act3_act4" sourceRef="act3" targetRef="act4" />
-    <bpmn:sequenceFlow id="Flow_act4_act5" sourceRef="act4" targetRef="act5" />
-    <bpmn:sequenceFlow id="Flow_act5_act2" sourceRef="act5" targetRef="act2" />
+    <bpmn:sequenceFlow id="Flow_act0_act1" sourceRef="StartEvent_act0" targetRef="Activity_act1" />
+    <bpmn:sequenceFlow id="Flow_act1_out" sourceRef="Activity_act1" targetRef="EndEvent_requestSent" />
+    <bpmn:endEvent id="EndEvent_requestSent" name="Request Sent">
+      <bpmn:incoming>Flow_act1_out</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
+  
+  <bpmn:process id="Process_RetryReceiverService" isExecutable="true">
+    <bpmn:task id="Activity_act2" name="Retry-Receiver-Service">
+      <bpmn:outgoing>Flow_act2_out</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_act2_out" sourceRef="Activity_act2" targetRef="EndEvent_received" />
+    <bpmn:endEvent id="EndEvent_received" name="Request Received">
+      <bpmn:incoming>Flow_act2_out</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  
+  <bpmn:process id="Process_RetrySchedulerService" isExecutable="true">
+    <bpmn:task id="Activity_act3" name="Retry-Scheduler-Service">
+      <bpmn:outgoing>Flow_act3_out</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_act3_out" sourceRef="Activity_act3" targetRef="EndEvent_scheduled" />
+    <bpmn:endEvent id="EndEvent_scheduled" name="Retry Scheduled">
+      <bpmn:incoming>Flow_act3_out</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  
+  <bpmn:process id="Process_RetryWorkerService" isExecutable="true">
+    <bpmn:task id="Activity_act4" name="Retry-Worker-Service">
+      <bpmn:outgoing>Flow_act4_out</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_act4_out" sourceRef="Activity_act4" targetRef="EndEvent_processed" />
+    <bpmn:endEvent id="EndEvent_processed" name="Retry Processed">
+      <bpmn:incoming>Flow_act4_out</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  
+  <bpmn:process id="Process_ExternalService" isExecutable="true">
+    <bpmn:task id="Activity_act5" name="External-Service">
+      <bpmn:outgoing>Flow_act5_out</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_act5_out" sourceRef="Activity_act5" targetRef="EndEvent_external" />
+    <bpmn:endEvent id="EndEvent_external" name="External Response">
+      <bpmn:incoming>Flow_act5_out</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  
+  <bpmn:process id="Process_RetryResultService" isExecutable="true">
+    <bpmn:task id="Activity_act6" name="Retry-Result-Service">
+      <bpmn:outgoing>Flow_act6_out</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_act6_out" sourceRef="Activity_act6" targetRef="EndEvent_result" />
+    <bpmn:endEvent id="EndEvent_result" name="Result Delivered">
+      <bpmn:incoming>Flow_act6_out</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
-      <bpmndi:BPMNShape id="Participant_1_di" bpmnElement="Participant_1" isHorizontal="true">
-        <dc:Bounds x="129" y="80" width="1200" height="600" />
+      <!-- Service-Request-Retry Participant -->
+      <bpmndi:BPMNShape id="Participant_ServiceRequestRetry_di" bpmnElement="Participant_ServiceRequestRetry" isHorizontal="true">
+        <dc:Bounds x="129" y="80" width="900" height="150" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_ServiceRequestRetry_Input_di" bpmnElement="Lane_ServiceRequestRetry_Input" isHorizontal="true">
-        <dc:Bounds x="159" y="80" width="1170" height="120" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_Retry-Receiver-Service_di" bpmnElement="Lane_Retry-Receiver-Service" isHorizontal="true">
-        <dc:Bounds x="159" y="200" width="1170" height="120" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_Retry-Scheduler-Service_di" bpmnElement="Lane_Retry-Scheduler-Service" isHorizontal="true">
-        <dc:Bounds x="159" y="320" width="1170" height="120" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_Retry-Worker-Service_di" bpmnElement="Lane_Retry-Worker-Service" isHorizontal="true">
-        <dc:Bounds x="159" y="440" width="1170" height="120" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_Retry-Result-Service_di" bpmnElement="Lane_Retry-Result-Service" isHorizontal="true">
-        <dc:Bounds x="159" y="560" width="1170" height="120" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="act1_di" bpmnElement="act1">
-        <dc:Bounds x="232" y="122" width="36" height="36" />
+      <bpmndi:BPMNShape id="StartEvent_act0_di" bpmnElement="StartEvent_act0">
+        <dc:Bounds x="179" y="137" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="216" y="165" width="68" height="14" />
+          <dc:Bounds x="152" y="180" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="act2_di" bpmnElement="act2">
-        <dc:Bounds x="350" y="220" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_act1_di" bpmnElement="Activity_act1">
+        <dc:Bounds x="265" y="115" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_requestSent_di" bpmnElement="EndEvent_requestSent">
+        <dc:Bounds x="415" y="137" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="332" y="236" width="136" height="14" />
+          <dc:Bounds x="398" y="180" width="70" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="act3_di" bpmnElement="act3">
-        <dc:Bounds x="520" y="340" width="100" height="80" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="502" y="356" width="136" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="act4_di" bpmnElement="act4">
-        <dc:Bounds x="690" y="460" width="100" height="80" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="677" y="476" width="126" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="act5_di" bpmnElement="act5">
-        <dc:Bounds x="860" y="580" width="100" height="80" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="847" y="596" width="126" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_act1_act2_di" bpmnElement="Flow_act1_act2">
-        <di:waypoint x="250" y="158" />
-        <di:waypoint x="250" y="190" />
-        <di:waypoint x="400" y="190" />
-        <di:waypoint x="400" y="220" />
+      <bpmndi:BPMNEdge id="Flow_act0_act1_di" bpmnElement="Flow_act0_act1">
+        <di:waypoint x="215" y="155" />
+        <di:waypoint x="265" y="155" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_act2_act3_di" bpmnElement="Flow_act2_act3">
-        <di:waypoint x="450" y="260" />
-        <di:waypoint x="485" y="260" />
-        <di:waypoint x="485" y="380" />
-        <di:waypoint x="520" y="380" />
+      <bpmndi:BPMNEdge id="Flow_act1_out_di" bpmnElement="Flow_act1_out">
+        <di:waypoint x="365" y="155" />
+        <di:waypoint x="415" y="155" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_act3_act4_di" bpmnElement="Flow_act3_act4">
-        <di:waypoint x="620" y="380" />
-        <di:waypoint x="655" y="380" />
-        <di:waypoint x="655" y="500" />
-        <di:waypoint x="690" y="500" />
+      
+      <!-- Retry-Receiver-Service Participant -->
+      <bpmndi:BPMNShape id="Participant_RetryReceiverService_di" bpmnElement="Participant_RetryReceiverService" isHorizontal="true">
+        <dc:Bounds x="129" y="250" width="900" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_act2_di" bpmnElement="Activity_act2">
+        <dc:Bounds x="265" y="285" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_received_di" bpmnElement="EndEvent_received">
+        <dc:Bounds x="415" y="307" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="390" y="350" width="86" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_act2_out_di" bpmnElement="Flow_act2_out">
+        <di:waypoint x="365" y="325" />
+        <di:waypoint x="415" y="325" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_act4_act5_di" bpmnElement="Flow_act4_act5">
-        <di:waypoint x="790" y="500" />
-        <di:waypoint x="825" y="500" />
-        <di:waypoint x="825" y="620" />
-        <di:waypoint x="860" y="620" />
+      
+      <!-- Retry-Scheduler-Service Participant -->
+      <bpmndi:BPMNShape id="Participant_RetrySchedulerService_di" bpmnElement="Participant_RetrySchedulerService" isHorizontal="true">
+        <dc:Bounds x="129" y="420" width="900" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_act3_di" bpmnElement="Activity_act3">
+        <dc:Bounds x="265" y="455" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_scheduled_di" bpmnElement="EndEvent_scheduled">
+        <dc:Bounds x="415" y="477" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="395" y="520" width="76" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_act3_out_di" bpmnElement="Flow_act3_out">
+        <di:waypoint x="365" y="495" />
+        <di:waypoint x="415" y="495" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_act5_act2_di" bpmnElement="Flow_act5_act2">
-        <di:waypoint x="910" y="580" />
-        <di:waypoint x="910" y="50" />
-        <di:waypoint x="400" y="50" />
-        <di:waypoint x="400" y="220" />
+      
+      <!-- Retry-Worker-Service Participant -->
+      <bpmndi:BPMNShape id="Participant_RetryWorkerService_di" bpmnElement="Participant_RetryWorkerService" isHorizontal="true">
+        <dc:Bounds x="129" y="590" width="900" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_act4_di" bpmnElement="Activity_act4">
+        <dc:Bounds x="265" y="625" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_processed_di" bpmnElement="EndEvent_processed">
+        <dc:Bounds x="415" y="647" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="393" y="690" width="80" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_act4_out_di" bpmnElement="Flow_act4_out">
+        <di:waypoint x="365" y="665" />
+        <di:waypoint x="415" y="665" />
+      </bpmndi:BPMNEdge>
+      
+      <!-- External-Service Participant -->
+      <bpmndi:BPMNShape id="Participant_ExternalService_di" bpmnElement="Participant_ExternalService" isHorizontal="true">
+        <dc:Bounds x="129" y="760" width="900" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_act5_di" bpmnElement="Activity_act5">
+        <dc:Bounds x="265" y="795" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_external_di" bpmnElement="EndEvent_external">
+        <dc:Bounds x="415" y="817" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="387" y="860" width="92" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_act5_out_di" bpmnElement="Flow_act5_out">
+        <di:waypoint x="365" y="835" />
+        <di:waypoint x="415" y="835" />
+      </bpmndi:BPMNEdge>
+      
+      <!-- Retry-Result-Service Participant -->
+      <bpmndi:BPMNShape id="Participant_RetryResultService_di" bpmnElement="Participant_RetryResultService" isHorizontal="true">
+        <dc:Bounds x="129" y="930" width="900" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_act6_di" bpmnElement="Activity_act6">
+        <dc:Bounds x="265" y="965" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_result_di" bpmnElement="EndEvent_result">
+        <dc:Bounds x="415" y="987" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="390" y="1030" width="86" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_act6_out_di" bpmnElement="Flow_act6_out">
+        <di:waypoint x="365" y="1005" />
+        <di:waypoint x="415" y="1005" />
+      </bpmndi:BPMNEdge>
+      
+      <!-- Message Flows -->
+      <bpmndi:BPMNEdge id="MessageFlow_1_di" bpmnElement="MessageFlow_1">
+        <di:waypoint x="315" y="195" />
+        <di:waypoint x="315" y="285" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_2_di" bpmnElement="MessageFlow_2">
+        <di:waypoint x="315" y="365" />
+        <di:waypoint x="315" y="455" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_3_di" bpmnElement="MessageFlow_3">
+        <di:waypoint x="315" y="535" />
+        <di:waypoint x="315" y="625" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_4_di" bpmnElement="MessageFlow_4">
+        <di:waypoint x="315" y="705" />
+        <di:waypoint x="315" y="795" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_5_di" bpmnElement="MessageFlow_5">
+        <di:waypoint x="295" y="795" />
+        <di:waypoint x="295" y="705" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_6_di" bpmnElement="MessageFlow_6">
+        <di:waypoint x="335" y="705" />
+        <di:waypoint x="335" y="965" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -1,83 +1,310 @@
 ---
 description: Generate BPMN 2.0 XML and detailed documentation from Roles, Activities, and Flows
-version: 1.2
+version: 2.0
 author: Chittawan Risukhumal
 alwaysApply: false
 ---
-You are an expert BPMN diagram generator and Enterprise Process Architect.
+You are an expert BPMN diagram generator and Enterprise Process Architect with advanced BPMN 2.0 knowledge.
 
-I will provide:
-- A list of Roles (Swimlanes) with:
-  * Role ID
-  * Role Name
-  * Responsibility
-  * Description (optional, for documentation)
-- Activities for each Role with:
-  * Activity ID
-  * Name
-  * Role
-  * Event Type (optional: start, intermediate, end)
-  * Description (optional, for documentation)
-- Connections between Activities (sequence flow)
+## Input Structure
 
-Your task:
-1. Generate **valid BPMN 2.0 XML** compatible with bpmn.io
-   - Include <laneSet> with each Role as a Lane
-   - Assign each Activity to its Lane based on Role
-   - Create <sequenceFlow> to connect tasks in the correct order
-   - Include <BPMNDiagram> and <BPMNPlane> with Bounds for positioning
-   - Include Event Type if provided
-   - Support multiple BPMN inputs and allow focus on selected process(es)
-   - Ensure no duplicate IDs or invalid references
-   - Save to specified location (`/{output-location}/01_*.bpmn`)
+I will provide a YAML configuration with the following elements:
 
-2. Generate **Markdown Documentation** summarizing:
-   - Roles: ID, Name, Responsibility, Description
-   - Activities: ID, Name, Role, Event Type, Description
-   - Flows: From → To (by Activity IDs)
-   - Format tables clearly for readability
-   - Include optional section for future Mermaid diagrams (System Context, Sequence, ERD)
-   - Save to specified location (`/{output-location}/01_*.md`)
+### 1. Roles (Swimlanes)
+- **id**: Unique identifier (required)
+- **name**: Display name (required)
+- **type**: participant | lane (default: lane)
+- **responsibility**: Role responsibility
+- **description**: Additional documentation
+- **system**: Target system/application
 
-Constraints:
-- Use Role IDs and Activity IDs consistently for all references
-- Avoid ambiguity with task names in non-English characters
-- Output XML and Markdown must be valid and immediately usable
+### 2. Activities
+- **id**: Unique identifier (required)
+- **name**: Activity name (required)
+- **role**: Role ID reference (required)
+- **type**: task | userTask | serviceTask | sendTask | receiveTask | manualTask | businessRuleTask | scriptTask | callActivity (default: task)
+- **eventType**: start | end | intermediate | boundary | timer | message | signal | error
+- **description**: Activity documentation
+- **sla**: Service Level Agreement (e.g., "30m", "2h", "1d")
+- **cost**: Process cost indicator
+- **risk**: high | medium | low
+- **system**: Target system for integration
+- **api**: API endpoint or service reference
+- **condition**: For conditional flows
 
-Template Input Example:
+### 3. Gateways
+- **id**: Unique identifier (required)
+- **name**: Gateway name
+- **type**: exclusive | parallel | inclusive | eventBased | complex (required)
+- **role**: Role ID where gateway is placed
+- **defaultFlow**: Default flow ID for exclusive/inclusive gateways
 
+### 4. Flows
+- **id**: Flow identifier (auto-generated if not provided)
+- **from**: Source element ID (required)
+- **to**: Target element ID (required)
+- **name**: Flow label
+- **condition**: Flow condition expression
+- **type**: sequence | message | association (default: sequence)
+
+### 5. Subprocesses (Optional)
+- **id**: Subprocess identifier
+- **name**: Subprocess name
+- **role**: Role ID where subprocess is placed
+- **type**: embedded | callActivity | transaction
+- **activities**: List of activity IDs within subprocess
+
+### 6. Messages/Signals (Optional)
+- **id**: Message/Signal identifier
+- **name**: Message/Signal name
+- **from**: Source participant/role
+- **to**: Target activity ID
+
+## Your Tasks
+
+### 1. Validation Phase (Pre-processing)
+- Validate all role IDs are unique
+- Verify all activity roles reference valid role IDs
+- Check all flow references point to existing elements
+- Ensure only one start event per process/subprocess
+- Validate gateway configurations (must have at least 2 outgoing flows)
+- Report any validation errors clearly before proceeding
+
+### 2. Generate Valid BPMN 2.0 XML
+**Core Requirements:**
+- Create proper BPMN structure with namespace declarations
+- Generate `<process>` with `<laneSet>` containing roles as lanes
+- Position elements using intelligent auto-layout algorithm:
+  - Start events on the left (x=150)
+  - Activities spaced 150px horizontally
+  - Gateways centered between connected activities
+  - Swimlanes height based on content (min 150px)
+- Support all BPMN elements:
+  - Tasks with proper type attributes
+  - Events (start, end, intermediate, boundary)
+  - Gateways (exclusive, parallel, inclusive, event-based)
+  - Subprocesses (embedded or call activities)
+  - Message flows between participants
+- Include `<BPMNDiagram>` with proper shape bounds and edge waypoints
+- Save to: `/{output-location}/01_*.bpmn`
+
+**Advanced Features:**
+- Auto-generate IDs for flows if not provided
+- Support conditional flows with expressions
+- Handle subprocess expansion/collapse states
+- Include data objects and associations if specified
+- Support boundary events on activities
+
+### 3. Generate Comprehensive Documentation
+**Markdown Structure:**
+```markdown
+# [Process Name] - Business Process Documentation
+
+## Executive Summary
+Brief description of the process purpose and scope
+
+## Process Participants
+
+| Role ID | Name | Type | Responsibility | System | Description |
+|---------|------|------|----------------|--------|-------------|
+
+## Process Activities
+
+| Activity ID | Name | Role | Type | Event | SLA | Risk | System | Description |
+|-------------|------|------|------|-------|-----|------|--------|-------------|
+
+## Process Gateways
+
+| Gateway ID | Name | Type | Role | Default Flow | Description |
+|------------|------|------|------|--------------|-------------|
+
+## Process Flows
+
+| Flow ID | From | To | Type | Condition | Description |
+|---------|------|-----|------|-----------|-------------|
+
+## Subprocesses
+[If applicable]
+
+## Integration Points
+- External Systems
+- APIs/Services
+- Message Exchanges
+
+## Non-Functional Requirements
+- SLAs by Activity
+- Risk Assessment
+- Cost Indicators
+
+## Appendix: Diagram Placeholders
+### System Context Diagram
+`[Placeholder for sa_002 output]`
+
+### Sequence Diagram
+`[Placeholder for sa_003 output]`
+
+### Data Model
+`[Placeholder for sa_005 output]`
+```
+
+Save to: `/{output-location}/01_*.md`
+
+## Constraints & Best Practices
+
+1. **Validation First**: Always validate before generation
+2. **ID Consistency**: Maintain consistent ID references throughout
+3. **Multi-language Support**: Properly handle Thai/English mixed content
+4. **Error Handling**: Provide clear error messages with element IDs
+5. **Auto-layout**: Minimize line crossings and overlap
+6. **Completeness**: Include all provided attributes in appropriate outputs
+7. **Standards Compliance**: Ensure BPMN 2.0 compliance for tool compatibility
+
+## Enhanced Template Example
+
+```yaml
+# Output location directive
+**output-location: /architect-sales
+
+# Process metadata
+process:
+  name: Sales Order Process
+  description: End-to-end sales order processing with payment and delivery
+
+# Participants/Roles
 roles:
+  - id: CUST
+    name: Customer
+    type: participant
+    responsibility: Order Placement
+    description: External customer placing orders
+    
   - id: SALE
-    name: Sales
-    responsibility: Operation
-    description: Responsible for defining requirements and initial customer interaction
-  - id: KA
-    name: Key Account Management
-    responsibility: CRM Management
-    description: Manages key accounts and monitors sales targets
-  - id: ORM
+    name: Sales Department
+    type: lane
+    responsibility: Order Processing
+    system: CRM
+    description: Responsible for order validation and processing
+    
+  - id: OMS
     name: Order Management System
-    description: Order Center, Order Management, ทุกคำสั่งซื่อจะต้องส่งข้อมูลมาที่นี่
-  - id: AFS
-    name: After Sales
-    description: จัดการบริการหลังการขาย, รับคืนสินค้า/ลดหนี้ ลดหนี้/เพิ่มหนี้
+    type: lane
+    system: SAP
+    description: Central order processing and management
+    
+  - id: PAY
+    name: Payment Service
+    type: participant
+    system: Payment Gateway
+    description: External payment processing service
 
+# Process Activities
 activities:
+  - id: start1
+    role: CUST
+    name: Place Order
+    eventType: start
+    description: Customer initiates order
+    
   - id: act1
     role: SALE
-    name: Define Requirements
-    eventType: Start
-    description: Capture customer needs and project requirements
+    name: Validate Order
+    type: userTask
+    sla: 30m
+    risk: low
+    description: Sales team validates order details
+    
   - id: act2
-    role: KA
-    name: Analysis Dashboard
-    eventType: Task
-    description: Analyze sales data to plan key account actions
+    role: SALE
+    name: Check Inventory
+    type: serviceTask
+    system: SAP
+    api: /api/inventory/check
+    sla: 5m
+    description: System checks product availability
+    
+  - id: gw1
+    role: SALE
+    name: Inventory Available?
+    type: gateway
+    
+  - id: act3
+    role: OMS
+    name: Create Sales Order
+    type: serviceTask
+    system: SAP
+    sla: 10m
+    risk: medium
+    description: Create order in SAP
+    
+  - id: act4
+    role: PAY
+    name: Process Payment
+    type: serviceTask
+    system: Payment Gateway
+    api: /api/payment/process
+    sla: 2m
+    risk: high
+    description: Process customer payment
 
+# Gateways
+gateways:
+  - id: gw1
+    name: Inventory Available?
+    type: exclusive
+    role: SALE
+    defaultFlow: flow_reject
+
+# Process Flows
 flows:
+  - from: start1
+    to: act1
+    
   - from: act1
     to: act2
+    
+  - from: act2
+    to: gw1
+    
+  - id: flow_proceed
+    from: gw1
+    to: act3
+    name: Yes
+    condition: inventory.available >= order.quantity
+    
+  - id: flow_reject
+    from: gw1
+    to: end_reject
+    name: No
+    
+  - from: act3
+    to: act4
+    
+  - from: act4
+    to: end_success
 
-Output Locations:
-- BPMN XML: `/{output-location}/01_*.bpmn`
-- Markdown Doc: `/{output-location}/01_*.md`
+# Subprocesses (optional)
+subprocesses:
+  - id: sub_validate
+    name: Detailed Validation
+    role: SALE
+    type: embedded
+    activities: [act1_1, act1_2, act1_3]
+
+# Messages (optional)
+messages:
+  - id: msg1
+    name: Payment Confirmation
+    from: PAY
+    to: act3
+```
+
+## Output Files
+1. **BPMN XML**: `/{output-location}/01_salesOrderProcess.bpmn`
+   - Valid BPMN 2.0 XML with auto-layout
+   - Compatible with bpmn.io and other BPMN tools
+   
+2. **Markdown Documentation**: `/{output-location}/01_salesOrderProcess.md`
+   - Comprehensive process documentation
+   - Tables for all elements
+   - Integration points and NFRs
+   - Placeholders for related diagrams

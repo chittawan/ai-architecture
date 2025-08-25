@@ -40,6 +40,16 @@ Layout Rules:
   - Arrange nodes to minimize line crossing.
   - Place the legend at the bottom of the diagram.
 
+Visual Guidelines:
+- Do NOT use custom colors (classDef) - rely on Mermaid's default styling for better readability
+- Use numbered labels on arrows to show sequence: |1.Action| (no quotes, no space after dot)
+- Avoid "number. text" pattern in labels (markdown interprets as ordered list)
+- Use "number.text" or "Step# text" or "(#) text" instead  
+- Add Thai/English labels where appropriate: ["Service<br/>(บริการ)"]
+- Use line breaks <br/> for better text formatting in nodes
+- Keep contrast high for accessibility
+- Use minimal icons only for system boundaries (optional single emoji)
+
 Input:
   - BPMN 2.0 XML files
   - Optional Markdown Documentation (Roles, Activities, Descriptions)

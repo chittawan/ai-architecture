@@ -1,20 +1,38 @@
 **output-location : /{this}/*
 
 roles:
+  - id: Service-Request-Retry
+    name: Service-Request-Retry
+    responsibility: Request Initiator
+    description: ผู้ใช้งานระบบ
+    type: participant  # participant = external, lane = internal (default)
   - id: Retry-Receiver-Service
     name: Retry-Receiver-Service
     responsibility: Receiver-Request
     description: รับ Request ที่่ต้องการ Retry 
+    type: lane
   - id: Retry-Scheduler-Service
     name: Retry-Scheduler-Service
     responsibility: produce-retry-request
     description: Scheduler-Job, GetList-Retry-Request, update-retry-request, produce-retry-request
+    type: lane
   - id: Retry-Worker-Service
     name: Retry-Worker-Service
     responsibility: call retry , retry-request and response
     description: retry-request, produce-retry-request_and_response
+    type: lane
+  - id: External-Service
+    name: External-Service
+    responsibility: receive-retry-request
+    description: receive-retry-request form Retry-Worker-Service
+    type: lane
 
 activities:
+  - id: act0
+    role: Service-Request-Retry
+    name: Service-Request-Retry
+    eventType: Start
+    description: ServiceRequestRetry, requester, intput and want to retry-request
   - id: act1
     role: ServiceRequestRetry
     name: Request-Retry
@@ -36,12 +54,19 @@ activities:
     eventType: Task
     description: retry-request
   - id: act5
+    role: External-Service
+    name: External-Service
+    eventType: Task
+    description: receive-retry-request
+  - id: act6
     role: Retry-Result-Service
     name: Retry-Result-Service
     eventType: Task
     description: result-retry-request
 
 flows:
+  - from: act0
+    to: act1
   - from: act1
     to: act2
   - from: act2
@@ -51,4 +76,6 @@ flows:
   - from: act4
     to: act5
   - from: act5
-    to: act1
+    to: act4
+  - from: act4
+    to: act6

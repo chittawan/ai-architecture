@@ -1,4 +1,10 @@
-ช่วยทำการ Regnerate คำสั่งตามนี้ด้วยครับ
-- @system-architect/sa_001.mdc 
-- @system-architect/sa_002.mdc 
-- @input_roles_act.yaml
+regenerate architect-sap-retry
+
+# This command will regenerate all artifacts for the architect-sap-retry project
+# based on the input_roles_act.yaml configuration file.
+# 
+# Generated files:
+# - 01_retryProcessFlow.bpmn (BPMN 2.0 XML)
+# - 01_retryProcessFlow.md (Process documentation)
+# - 02_retryProcessSystemContext.md (System context diagram)
+# - 03_retryProcessSequence.md (Sequence diagram)
