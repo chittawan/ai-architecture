@@ -15,24 +15,21 @@ Constraints:
 Diagram Rules:
   1. Focus on the system as the center.
      - Draw a single box representing the System Boundary with a clear system name (e.g., "Order Management System (OMS)").
-     - Include internal services/components **inside the system boundary** only if specified in the input mapping.
   2. Place external entities around the system.
      - Examples: Customer, Supplier, Payment Gateway, ERP, Reporting Service.
-     - Do not include other internal processes outside the system boundary.
+     - Do not include internal process details outside the system boundary.
   3. Show only main data flows / interactions.
      - Use arrows with concise labels: Source -->|Label| Target.
-     - Include protocol or integration type if available: REST, RFC, MQ, Event.
-     - Example: OMS -->|Invoice (REST)| ERP
-  4. Annotate internal services with optional description.
-     - Use inline Mermaid comment (%%) or tooltip instead of long text in the node.
-  5. Use minimal and clean symbols.
-     - Box = Entity / Service / System
+     - Example: Customer -->|Order Request| OMS
+  4. Use minimal and clean symbols.
+     - Box = Entity / System
      - Arrow = Data Flow / Interaction
      - Avoid unnecessary icons, colors, or decorations.
-  6. Include a simple legend at the bottom.
-     - Explain arrows (Data Exchange: API, File, MQ, Event) and node types (External Entity = User/System, Service = internal component).
-  7. Highlight critical nodes only if specified.
+  5. Include a simple legend at the bottom.
+     - Explain arrows (Data Exchange: API, File, MQ) and node types (External Entity = User/System).
+  6. Highlight critical nodes only if specified.
      - Use :::highlight class for visual emphasis; no other decorations.
+
 
 Layout Rules:
   - Use `flowchart LR` (Left to Right) layout by default from Internet Facing -> DMZ -> Private Zone -> Internal Zone.

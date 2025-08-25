@@ -1,0 +1,54 @@
+**output-location : /{this}/*
+
+roles:
+  - id: Retry-Receiver-Service
+    name: Retry-Receiver-Service
+    responsibility: Receiver-Request
+    description: รับ Request ที่่ต้องการ Retry 
+  - id: Retry-Scheduler-Service
+    name: Retry-Scheduler-Service
+    responsibility: produce-retry-request
+    description: Scheduler-Job, GetList-Retry-Request, update-retry-request, produce-retry-request
+  - id: Retry-Worker-Service
+    name: Retry-Worker-Service
+    responsibility: call retry , retry-request and response
+    description: retry-request, produce-retry-request_and_response
+
+activities:
+  - id: act1
+    role: ServiceRequestRetry (Input)
+    name: Request-Retry
+    eventType: Start
+    description: ServiceRequestRetry
+  - id: act2
+    role: Retry-Receiver-Service
+    name: Retry-Receiver-Service
+    eventType: Task
+    description: receive-request
+  - id: act3
+    role: Retry-Scheduler-Service
+    name: Retry-Scheduler-Service
+    eventType: Task
+    description: produce-retry-request
+  - id: act4  
+    role: Retry-Worker-Service
+    name: Retry-Worker-Service
+    eventType: Task
+    description: retry-request
+  - id: act5
+    role: Retry-Result-Service
+    name: Retry-Result-Service
+    eventType: Task
+    description: result-retry-request
+
+flows:
+  - from: act1
+    to: act2
+  - from: act2
+    to: act3
+  - from: act3
+    to: act4
+  - from: act4
+    to: act5
+  - from: act5
+    to: act1

@@ -1,3 +1,4 @@
+**output-location : /architect-otc/*
 
 roles:
   - id: SALE

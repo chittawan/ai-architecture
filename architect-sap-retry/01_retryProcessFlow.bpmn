@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_1">
+    <bpmn:participant id="Participant_1" name="SAP Retry Process" processRef="Process_1" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_ServiceRequestRetry_Input" name="ServiceRequestRetry (Input)">
+        <bpmn:flowNodeRef>act1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Retry-Receiver-Service" name="Retry-Receiver-Service">
+        <bpmn:flowNodeRef>act2</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Retry-Scheduler-Service" name="Retry-Scheduler-Service">
+        <bpmn:flowNodeRef>act3</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Retry-Worker-Service" name="Retry-Worker-Service">
+        <bpmn:flowNodeRef>act4</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Retry-Result-Service" name="Retry-Result-Service">
+        <bpmn:flowNodeRef>act5</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="act1" name="Request-Retry">
+      <bpmn:outgoing>Flow_act1_act2</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="act2" name="Retry-Receiver-Service">
+      <bpmn:incoming>Flow_act1_act2</bpmn:incoming>
+      <bpmn:incoming>Flow_act5_act1</bpmn:incoming>
+      <bpmn:outgoing>Flow_act2_act3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="act3" name="Retry-Scheduler-Service">
+      <bpmn:incoming>Flow_act2_act3</bpmn:incoming>
+      <bpmn:outgoing>Flow_act3_act4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="act4" name="Retry-Worker-Service">
+      <bpmn:incoming>Flow_act3_act4</bpmn:incoming>
+      <bpmn:outgoing>Flow_act4_act5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="act5" name="Retry-Result-Service">
+      <bpmn:incoming>Flow_act4_act5</bpmn:incoming>
+      <bpmn:outgoing>Flow_act5_act1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_act1_act2" sourceRef="act1" targetRef="act2" />
+    <bpmn:sequenceFlow id="Flow_act2_act3" sourceRef="act2" targetRef="act3" />
+    <bpmn:sequenceFlow id="Flow_act3_act4" sourceRef="act3" targetRef="act4" />
+    <bpmn:sequenceFlow id="Flow_act4_act5" sourceRef="act4" targetRef="act5" />
+    <bpmn:sequenceFlow id="Flow_act5_act1" sourceRef="act5" targetRef="act2" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="Participant_1_di" bpmnElement="Participant_1" isHorizontal="true">
+        <dc:Bounds x="129" y="80" width="1200" height="600" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_ServiceRequestRetry_Input_di" bpmnElement="Lane_ServiceRequestRetry_Input" isHorizontal="true">
+        <dc:Bounds x="159" y="80" width="1170" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Retry-Receiver-Service_di" bpmnElement="Lane_Retry-Receiver-Service" isHorizontal="true">
+        <dc:Bounds x="159" y="200" width="1170" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Retry-Scheduler-Service_di" bpmnElement="Lane_Retry-Scheduler-Service" isHorizontal="true">
+        <dc:Bounds x="159" y="320" width="1170" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Retry-Worker-Service_di" bpmnElement="Lane_Retry-Worker-Service" isHorizontal="true">
+        <dc:Bounds x="159" y="440" width="1170" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Retry-Result-Service_di" bpmnElement="Lane_Retry-Result-Service" isHorizontal="true">
+        <dc:Bounds x="159" y="560" width="1170" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act1_di" bpmnElement="act1">
+        <dc:Bounds x="232" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="216" y="165" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act2_di" bpmnElement="act2">
+        <dc:Bounds x="350" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="332" y="236" width="136" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act3_di" bpmnElement="act3">
+        <dc:Bounds x="520" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="502" y="356" width="136" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act4_di" bpmnElement="act4">
+        <dc:Bounds x="690" y="460" width="100" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="677" y="476" width="126" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="act5_di" bpmnElement="act5">
+        <dc:Bounds x="860" y="580" width="100" height="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="847" y="596" width="126" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_act1_act2_di" bpmnElement="Flow_act1_act2">
+        <di:waypoint x="250" y="158" />
+        <di:waypoint x="250" y="190" />
+        <di:waypoint x="400" y="190" />
+        <di:waypoint x="400" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_act2_act3_di" bpmnElement="Flow_act2_act3">
+        <di:waypoint x="450" y="260" />
+        <di:waypoint x="485" y="260" />
+        <di:waypoint x="485" y="380" />
+        <di:waypoint x="520" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_act3_act4_di" bpmnElement="Flow_act3_act4">
+        <di:waypoint x="620" y="380" />
+        <di:waypoint x="655" y="380" />
+        <di:waypoint x="655" y="500" />
+        <di:waypoint x="690" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_act4_act5_di" bpmnElement="Flow_act4_act5">
+        <di:waypoint x="790" y="500" />
+        <di:waypoint x="825" y="500" />
+        <di:waypoint x="825" y="620" />
+        <di:waypoint x="860" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_act5_act1_di" bpmnElement="Flow_act5_act1">
+        <di:waypoint x="910" y="580" />
+        <di:waypoint x="910" y="50" />
+        <di:waypoint x="400" y="50" />
+        <di:waypoint x="400" y="220" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
